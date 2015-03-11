@@ -1,40 +1,33 @@
 var express = require('express');
-var router = express();
-var Book;
-var Author;
+var router = express.Router();
 var _ = require('underscore');
 var handleError;
-var async = require('async');
 
-/*
-	TODO:
-	- QueryString filter: topCategories={nummer}
-		Tel alle boeken in een categorie
-		Order deze categorie van meeste naar minste boeken
-		Geef alleen de boeken terug die in de top {nummer} categorieën voorkomen
-		(For now: Een boek kan maar 1 categorie hebben)
-
-	// Ten slotte, een moeilijkere (door Async methodes)
-	- Population: Vul alle autors van het boek
-*/
-function getUsers(req, res){
-	var query = {};
-	if(req.params.id){
-		query._id = req.params.id.toLowerCase();
-	}
-
-	if(req.params.id){
-		data = data[0];
-	}
-	res.json(data);
-}
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
 
 // Routing
 router.route('/')
-	.get(getUsers);
+	.get(function(req, res, next){
+		User.find(function(err, result){
+			res.json(result); // Returns all users
+		});
+	})
+	.post(function(req, res, next){
+		var user = new User(req.body.user);
+		console.log(user);
+		user.save(function(err, user){
+			res.send({msg: "The user " + user.UserName + "has been added successfully."});
+		});
+	});
 
 router.route('/:id')
-	.get(getUsers);
+	.get(function(req, res, next){
+		User.findOne({_id:req.params.id} ,function(err, user){
+			res.send(user); 
+		});
+	});
+
 
 // Export
 module.exports = function (mongoose, errCallback){

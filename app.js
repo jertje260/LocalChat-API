@@ -10,8 +10,8 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/LocalChat');
 
 // Models
-require('./models/user');
-require('./models/line');
+require('./models/user')(mongoose);
+require('./models/line')(mongoose);
 
 function handleError(req, res, statusCode, message){
     console.log();
@@ -27,7 +27,7 @@ function handleError(req, res, statusCode, message){
 // Routes
 var routes = require('./routes/index');
 var users = require('./routes/users')(mongoose, handleError);
-var route = require('./routes/lines')(mongoose, handleError);
+var lines = require('./routes/lines')(mongoose, handleError);
 
 var app = express();
 

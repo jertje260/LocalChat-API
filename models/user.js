@@ -1,11 +1,12 @@
 function init(mongoose){
 	console.log('Initializing user schema');
-	var userSchema = new mongoose.Schema({
-		UserName: {type: String, required: true},
+	var userSchema = new mongoose.Schema
+	({
+		UserName: {type: String, required: true, unique: true},
 		DisplayName: {type: String, required: true},
-		HashedPass: {type: Password, required: true},
-		Salt: {type: string, required: true},
-		RadiusM: {type: double, default: 500}
+		HashedPass: {type: String, required: true},
+		Salt: {type: String, required: true},
+		RadiusM: {type: Number, default: 500}
 
 	});
 
@@ -38,7 +39,7 @@ function init(mongoose){
 	});
 
 
-	return mongoose.model('User', userSchema);
+	module.exports = mongoose.model('User', userSchema);
 }
 
 module.exports = init;

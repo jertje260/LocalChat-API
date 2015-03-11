@@ -3,13 +3,13 @@ function init(mongoose){
 	require('./user');
 	var lineSchema = new mongoose.Schema({
 		lineString: {type: String, required: true},
-		User: {[mongoose.model('User')], required: true},
-		Longitude: {type: double, required: true},
-		Latitude: {type: double, required: true}
+		User: [mongoose.model('User')],
+		Longitude: {type: Number, required: true},
+		Latitude: {type: Number, required: true}
 
 	});
 
-	return mongoose.model('Line', lineSchema);
+	module.exports = mongoose.model('Line', lineSchema);
 }
 
 module.exports = init;

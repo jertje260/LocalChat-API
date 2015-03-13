@@ -14,19 +14,25 @@ router.route('/')
 		});
 	})
 	.post(function(req, res, next){ //register new user
-		console.log(req.body.User + " " + req.body.UserName + " " + req.body.password);
-
-		var user = new User(req.body.User);
+		var user = new User();
 		user.UserName = req.body.UserName;
-		user.password = req.body.password;
+		user.set('password', req.body.password);
+		
 		if(req.body.DisplayName != 'undefined')
 		{
 			user.DisplayName = req.body.DisplayName;
 		} else {
 			user.DisplayName = user.UserName;
 		}
+		console.log(user);
+		console.log(user.UserName);
 		user.save(function(err, user){
-			res.send({msg: "The user " + user.UserName + "has been added successfully."});
+			if(err){
+				res.send('error ' + user);
+			}
+			else{
+				res.send("User added" + user);
+			}
 		});
 	});
 

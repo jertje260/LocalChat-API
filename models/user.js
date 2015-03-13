@@ -1,4 +1,5 @@
 function init(mongoose){
+	var crypto = require('crypto');
 	console.log('Initializing user schema');
 	var userSchema = new mongoose.Schema
 	({
@@ -11,8 +12,11 @@ function init(mongoose){
 
 	userSchema.virtual('password')
 		.set(function(password){
+			console.log('setting password');
 			this._password = password;
+			console.log('making salt');
 			this.salt = this.makeSalt();
+			console.log('encrypting password');
 			this.HashedPass = this.encryptPassword(password);
 		})
 		.get(function() { return this._password; });
@@ -22,7 +26,7 @@ function init(mongoose){
 	};
 
 	userSchema.methods.makeSalt = function makeSalt() {
-		return Math.round((new Date.valueOf() * Math.random())) + '';
+		return Math.round((new Date().valueOf() * Math.random())) + '';
 	};
 
 	userSchema.methods.encryptPassword = function encryptPassword(password){

@@ -14,8 +14,17 @@ router.route('/')
 		});
 	})
 	.post(function(req, res, next){ //register new user
-		var user = new User(req.body.user);
-		console.log(user);
+		console.log(req.body.User + " " + req.body.UserName + " " + req.body.password);
+
+		var user = new User(req.body.User);
+		user.UserName = req.body.UserName;
+		user.password = req.body.password;
+		if(req.body.DisplayName != 'undefined')
+		{
+			user.DisplayName = req.body.DisplayName;
+		} else {
+			user.DisplayName = user.UserName;
+		}
 		user.save(function(err, user){
 			res.send({msg: "The user " + user.UserName + "has been added successfully."});
 		});

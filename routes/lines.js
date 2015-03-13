@@ -4,26 +4,27 @@ var Line;
 var _ = require('underscore');
 var handleError;
 
-/*
-*/
-function getLines(req, res){
-	var query = {};
-	if(req.params.id){
-		query._id = req.params.id.toLowerCase();
-	}
 
-	if(req.params.id){
-		data = data[0];
-	}
-	res.json(data);
-}
 
 // Routing
 router.route('/')
-	.get(getLines);
+	.get(function(req, res, next){
+		Line.find(function(err, result){
+			res.json(result); // Returns all lines
+		});
+	})
+	.post(function(req, res, next){ //add new line
+		var line = new Line(req.body.line);
+		line.Body = req.body.Body;
+		// line.Longitude = req.body.Longitude;
+		// line.Latitude = req.body.Latitude;
+		// line.User = req.body.User;
+		console.log(line);
+		line.save(function(err, line){
+			res.send({msg: "" + line.Body + ": was send."});
+		});
+	});
 
-router.route('/:id')
-	.get(getLines);
 
 // Export
 module.exports = function (mongoose, errCallback){

@@ -17,17 +17,17 @@ function init(mongoose){
 		})
 		.get(function() { return this._password; });
 
-	userSchema.method('authenticate', function(plainText) {
+	userSchema.methods.authenticate =  function authenticate(plainText) {
 		return this.encryptPassword(plainText) === this.HashedPass;
-	});
+	};
 
-	userSchema.method('makeSalt', function() {
+	userSchema.methods.makeSalt = function makeSalt() {
 		return Math.round((new Date.valueOf() * Math.random())) + '';
-	});
+	};
 
-	userSchema.method('encryptPassword', function(password){
-	return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
-	});
+	userSchema.methods.encryptPassword = function encryptPassword(password){
+		return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+	};
 
 	userSchema.pre('save', function(next) {
 		if(!validatePresenceOf(this.password)){

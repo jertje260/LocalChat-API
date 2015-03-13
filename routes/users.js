@@ -26,12 +26,12 @@ router.route('/')
 		}
 		console.log(user);
 		console.log(user.UserName);
-		user.save(function(err, user){
+		user.save(function(err){
 			if(err){
-				res.send('error ' + user);
+				res.send(err + user);
 			}
 			else{
-				res.send("User added" + user);
+				res.send(user);
 			}
 		});
 	});

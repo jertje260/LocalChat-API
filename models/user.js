@@ -15,7 +15,7 @@ function init(mongoose){
 			console.log('setting password');
 			this._password = password;
 			console.log('making salt');
-			this.salt = this.makeSalt();
+			this.Salt = this.makeSalt();
 			console.log('encrypting password');
 			this.HashedPass = this.encryptPassword(password);
 		})
@@ -30,11 +30,11 @@ function init(mongoose){
 	};
 
 	userSchema.methods.encryptPassword = function encryptPassword(password){
-		return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+		return crypto.createHmac('sha1', this.Salt).update(password).digest('hex');
 	};
 
 	userSchema.pre('save', function(next) {
-		if(!validatePresenceOf(this.password)){
+		if(this.password == 'undefined'){
 			next(new Error('Invalid password'));
 		} else {
 			next();

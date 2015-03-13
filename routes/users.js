@@ -13,7 +13,7 @@ router.route('/')
 			res.json(result); // Returns all users
 		});
 	})
-	.post(function(req, res, next){
+	.post(function(req, res, next){ //register new user
 		var user = new User(req.body.user);
 		console.log(user);
 		user.save(function(err, user){

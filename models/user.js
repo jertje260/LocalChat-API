@@ -7,7 +7,6 @@ function init(mongoose){
 		HashedPass: {type: String, required: true},
 		Salt: {type: String, required: true},
 		RadiusM: {type: Number, default: 500}
-
 	});
 
 	userSchema.virtual('password')

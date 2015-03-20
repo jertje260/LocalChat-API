@@ -1,0 +1,1 @@
+"C:/Program Files/mongo/mongod.exe" --dbpath "C:/Users/Sam/Documents/GitHub/LocalChat-API/data"

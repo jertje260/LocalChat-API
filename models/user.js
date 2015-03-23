@@ -7,7 +7,8 @@ function init(mongoose){
 		DisplayName: {type: String, required: true},
 		HashedPass: {type: String, required: true},
 		Salt: {type: String, required: true},
-		RadiusM: {type: Number, default: 500}
+		Role: {type: String, default: 'User', enum: ['User', 'Admin']},
+		RadiusM: {type: Number, default: 500} // radius in meters
 	});
 
 	userSchema.virtual('password')

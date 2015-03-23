@@ -4,8 +4,8 @@ function init(mongoose){
 	var lineSchema = new mongoose.Schema({
 		Body: {type: String, required: true},
 		User: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-		Longitude: {type: Number, required: true},
-		Latitude: {type: Number, required: true},
+		Longitude: {type: Number, required: true}, //in radians
+		Latitude: {type: Number, required: true}, //in radians
 		Datetime: {type: Date, default: Date.now}
 
 	});

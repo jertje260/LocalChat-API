@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
   },
   "dependencies": {
     "async": "*",
@@ -23,5 +24,10 @@
     "mime-db": "*",
     "source-map": "*",
     "acorn": "*"
+  },
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1",
+    "supertest": "^0.15.0"
   }
 }

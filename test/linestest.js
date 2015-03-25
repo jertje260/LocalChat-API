@@ -1,10 +1,10 @@
 var request = require('supertest');
 var expect = require('chai').expect;
 var should = require('chai').should();
+var mongoose = require('mongoose');
 
 var app = require('express')();
 var lines = require('../routes/lines');
-app.use('/', lines);
 
 function makeRequest(route, statusCode, done){
 	request(app)
@@ -17,7 +17,7 @@ function makeRequest(route, statusCode, done){
 		});
 };
 
-describe('Testing localchat route', function(){
+describe('Testing lines route', function(){
 	describe('without params', function(){
 		// Tests without params
 		it('should return location', function(){
@@ -46,7 +46,6 @@ describe('Testing localchat route', function(){
 				expect(res.body.User).to.have.property('RadiusM');
 				expect(res.body.User.RadiusM).to.not.be.undefined;
 
-				expect(res.body.User).to.have.
 				done();
 			});
 		});
@@ -58,9 +57,8 @@ describe('Testing localchat route', function(){
 			makeRequest('/lines', 200, function(err, res){
 				if(err){ return done(err); }
 
-				expect(res.body).to.have.property('Admin');
-				expect(res.body.Admin).to.be.a('Boolean');
-				expect(res.body.Admin).to.equal(true);
+				expect(res.body.User).to.have.property('Role');
+				expect(res.body.User.Role).to.equal('Admin');
 				done();
 			});
 		});
@@ -69,6 +67,10 @@ describe('Testing localchat route', function(){
 				if(err){ return done(err); }
 
 				expect(res.body).to.have.property('User');
+
+				expect(res.body.User).to.have.property('Role');
+				expect(res.body.User.Role).to.equal('User');
+
 				expect(res.body.User).to.have.property('UserName');
 				expect(res.body.User.UserName).to.equal('Test'); // Change 'Test' to an UserName from the database
 				done();

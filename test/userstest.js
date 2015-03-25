@@ -1,10 +1,10 @@
 var request = require('supertest');
 var expect = require('chai').expect;
 var should = require('chai').should();
+var mongoose = require('mongoose');
 
 var app = require('express')();
 var users = require('../routes/users');
-app.use('/', users);
 
 function makeRequest(route, statusCode, done){
 	request(app)
@@ -17,7 +17,7 @@ function makeRequest(route, statusCode, done){
 		});
 };
 
-describe('Testing localchat route', function(){
+describe('Testing users route', function(){
 	describe('without params', function(){
 		// Tests without params
 		it('should return list of users', function(){
@@ -32,8 +32,8 @@ describe('Testing localchat route', function(){
 		});
 	});
 
-	describe('with params', function(){
-		// Tests with params
+	// describe('with params', function(){
+	// 	// Tests with params
 		
-	});
+	// });
 });

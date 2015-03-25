@@ -4,7 +4,7 @@ var _ = require('underscore');
 var handleError;
 
 var mongoose = require('mongoose');
-var User = mongoose.model('User');
+// var User = mongoose.model('User');
 
 // Routing
 router.route('/')
@@ -14,6 +14,8 @@ router.route('/')
 		});
 	})
 	.post(function(req, res, next){ //register new user
+		var User = mongoose.model('User');
+		
 		var user = new User();
 		user.UserName = req.body.UserName;
 		user.set('password', req.body.password);

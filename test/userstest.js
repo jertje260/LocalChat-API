@@ -30,19 +30,6 @@ describe('Testing localchat route', function(){
 				done();
 			});
 		});
-		it('should return location', function(){
-			makeRequest('/lines', 200, function(err, res){
-				if(err){ return done(err); }
-
-				expect(res.body).to.have.property('Longitude');
-				expect(res.body.User.Longitude).to.not.be.undefined;
-
-				expect(res.body).to.have.property('Latitude');
-				expect(res.body.User.Latitude).to.not.be.undefined;
-				
-				done();
-			});
-		});
 	});
 
 	describe('with params', function(){

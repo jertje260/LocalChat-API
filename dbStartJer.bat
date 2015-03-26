@@ -1,0 +1,1 @@
+"E:\Program Files\MongoDB\Server\3.0\bin\mongod.exe" --dbpath "E:/Users/Du5fd/NodeJS/LocalChat-API/data"

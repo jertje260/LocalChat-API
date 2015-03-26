@@ -38,9 +38,10 @@ router.route('/')
 		});
 	});
 
-router.route('/:id')
+router.route('/:UserName')
 	.get(function(req, res, next){
-		User.findOne({_id:req.params.id} ,function(err, user){
+		console.log(req.params.UserName);
+		User.findOne({UserName:req.params.UserName} ,function(err, user){
 			res.send(user); 
 		});
 	});

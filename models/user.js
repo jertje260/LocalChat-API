@@ -13,11 +13,8 @@ function init(mongoose){
 
 	userSchema.virtual('password')
 		.set(function(password){
-			console.log('setting password');
 			this._password = password;
-			console.log('making salt');
 			this.Salt = this.makeSalt();
-			console.log('encrypting password');
 			this.HashedPass = this.encryptPassword(password);
 		})
 		.get(function() { return this._password; });

@@ -19,15 +19,22 @@ router.route('/')
 		var user = new User();
 		user.UserName = req.body.UserName;
 		user.set('password', req.body.password);
-		
-		if(req.body.DisplayName != 'undefined')
+		console.log(req.body.DisplayName);
+		if(req.body.DisplayName == undefined)
 		{
-			user.DisplayName = req.body.DisplayName;
-		} else {
 			user.DisplayName = user.UserName;
+		} else {
+			user.DisplayName = req.body.DisplayName;
 		}
+		if(req.body.Radius != undefined){
+			user.RadiusM = req.body.Radius;
+		}
+		if(req.body.Role != undefined){ // might wanna remove this because of security issues.
+			user.Role = req.body.Role;
+		}
+
 		console.log(user);
-		console.log(user.UserName);
+		console.log(user.DisplayName);
 		user.save(function(err){
 			if(err){
 				res.send(err + user);

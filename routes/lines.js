@@ -16,7 +16,7 @@ SELECT * FROM Places WHERE acos(sin(1.3963) * sin(Lat) + cos(1.3963) * cos(Lat) 
 */
 router.route('/')
 	.get(function(req, res, next){
-		if(req.query.Latitude != 'undefined' && req.query.Longitude != 'undefined' && req.query.Radius != 'undefined'){
+		if(req.query.Latitude != undefined && req.query.Longitude != undefined && req.query.Radius != undefined){
 			// Magic calculation for circle
 
 			var Radius = (req.query.Radius/1000); //radius in km
@@ -73,6 +73,8 @@ router.route('/')
 			}
 		});
 	});
+
+
 
 
 // Export

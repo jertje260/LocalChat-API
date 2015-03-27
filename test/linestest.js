@@ -3,14 +3,23 @@ var expect = require('chai').expect;
 var should = require('chai').should();
 var mongoose = require('mongoose');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var lines = require('../routes/lines');
+app.use('/lines', lines);
 
 function makeRequest(route, statusCode, done){
+	// console.log(app);
+	// request(app)
+	// 	.get(route)
+	// 	.end(function(err, res){
+	// 		console.log(res.error);
+	// 	});
 	request(app)
 		.get(route)
 		.expect(statusCode)
 		.end(function(err, res){
+			console.log(err);
 			if(err){ return done(err); }
 
 			done(null, res);
@@ -27,7 +36,6 @@ describe('Testing lines route', function(){
 		// Tests without params
 		it('should return an array', function(){
 			makeRequest('/lines', 200, function(err, res){
-				console.log(err);
 				if(err){ return done(err); }
 
 				expect(res.body).should.be.an.instanceOf(Array);
@@ -37,8 +45,7 @@ describe('Testing lines route', function(){
 		});
 
 		it('should return messages of all users', function(){
-			makeRequest('/lines', 200, function(err, res){
-				console.log(err);
+			makeRequest('/', 200, function(err, res){
 				if(err){ return done(err); }
 
 				expect(res.body).to.have.property('User');
@@ -50,8 +57,7 @@ describe('Testing lines route', function(){
 		});
 
 		it('should return lines', function(){
-			makeRequest('/lines', 200, function(err, res){
-				console.log(err);
+			makeRequest('/', 200, function(err, res){
 				if(err){ return done(err); }
 				
 				expect(res.body).should.be.an.instanceOf(Array);
@@ -74,19 +80,19 @@ describe('Testing lines route', function(){
 
 	describe('with params', function(){
 		// Tests with params
-		it('should return messages of user', function(){
-			makeRequest('/lines/username', 200, function(err, res){
-				if(err){ return done(err); }
+		// it('should return messages of user', function(){
+		// 	makeRequest('/lines/username', 200, function(err, res){
+		// 		if(err){ return done(err); }
 
-				expect(res.body).to.have.property('User');
+		// 		expect(res.body).to.have.property('User');
 
-				expect(res.body.User).to.have.property('Role');
-				expect(res.body.User.Role).to.equal('User');
+		// 		expect(res.body.User).to.have.property('Role');
+		// 		expect(res.body.User.Role).to.equal('User');
 
-				expect(res.body.User).to.have.property('UserName');
-				expect(res.body.User.UserName).to.equal(req.params.username);
-				done();
-			});
-		});
+		// 		expect(res.body.User).to.have.property('UserName');
+		// 		expect(res.body.User.UserName).to.equal(req.params.username);
+		// 		done();
+		// 	});
+		// });
 	});
 });

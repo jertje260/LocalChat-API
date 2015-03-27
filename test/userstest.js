@@ -3,8 +3,10 @@ var expect = require('chai').expect;
 var should = require('chai').should();
 var mongoose = require('mongoose');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var users = require('../routes/users');
+app.use('/users', users);
 
 function makeRequest(route, statusCode, done){
 	request(app)
@@ -24,7 +26,7 @@ describe('Testing users route', function(){
 	describe('without params', function(){
 		// Tests without params
 		it('should return list of users', function(){
-			makeRequest('/', 200, function(err, res){
+			makeRequest('/users', 200, function(err, res){
 				console.log(err);
 				if(err){ return done(err); }
 

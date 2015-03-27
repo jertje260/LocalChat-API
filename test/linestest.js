@@ -17,51 +17,63 @@ function makeRequest(route, statusCode, done){
 		});
 };
 
+// ----- Wat moet er getest worden -----
+// Een user ingelogd is als admin
+// Welke berichten moeten worden weergegeven(d.m.v. radius en longitude en latitude)
+
+
 describe('Testing lines route', function(){
 	describe('without params', function(){
 		// Tests without params
-		it('should return location', function(){
+		it('should return an array', function(){
 			makeRequest('/lines', 200, function(err, res){
+				console.log(err);
 				if(err){ return done(err); }
 
-				expect(res.body).to.have.property('Longitude');
-				expect(res.body.Longitude).to.not.be.undefined;
-
-				expect(res.body).to.have.property('Latitude');
-				expect(res.body.Latitude).to.not.be.undefined;
-				
-				done();
-			});
-		});
-		it('should return messages of specific radius', function(){
-			makeRequest('/lines', 200, function(err, res){
-				if(err){ return done(err); }
-
-				expect(res.body).to.have.property('Longitude');
-				expect(res.body.Longitude).to.not.be.undefined;
-
-				expect(res.body).to.have.property('Latitude');
-				expect(res.body.Latitude).to.not.be.undefined;
-
-				expect(res.body.User).to.have.property('RadiusM');
-				expect(res.body.User.RadiusM).to.not.be.undefined;
+				expect(res.body).should.be.an.instanceOf(Array);
 
 				done();
 			});
 		});
-	});
 
-	describe('with params', function(){
-		// Tests with params
 		it('should return messages of all users', function(){
 			makeRequest('/lines', 200, function(err, res){
+				console.log(err);
 				if(err){ return done(err); }
+
+				expect(res.body).to.have.property('User');
 
 				expect(res.body.User).to.have.property('Role');
 				expect(res.body.User.Role).to.equal('Admin');
 				done();
 			});
 		});
+
+		it('should return lines', function(){
+			makeRequest('/lines', 200, function(err, res){
+				console.log(err);
+				if(err){ return done(err); }
+				
+				expect(res.body).should.be.an.instanceOf(Array);
+
+				$.each(res.body, function(index, value) {
+					expect(value).to.have.property('Body');
+					expect(value).to.have.property('RadiusM');
+				});
+
+				done();
+			});
+		});
+
+		// Body: {type: String, required: true},
+		// User: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+		// Longitude: {type: Number, required: true}, //in radians
+		// Latitude: {type: Number, required: true}, //in radians
+		// Datetime: {type: Date, default: Date.now}
+	});
+
+	describe('with params', function(){
+		// Tests with params
 		it('should return messages of user', function(){
 			makeRequest('/lines/username', 200, function(err, res){
 				if(err){ return done(err); }
@@ -72,7 +84,7 @@ describe('Testing lines route', function(){
 				expect(res.body.User.Role).to.equal('User');
 
 				expect(res.body.User).to.have.property('UserName');
-				expect(res.body.User.UserName).to.equal('Test'); // Change 'Test' to an UserName from the database
+				expect(res.body.User.UserName).to.equal(req.params.username);
 				done();
 			});
 		});

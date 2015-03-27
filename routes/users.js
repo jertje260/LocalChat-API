@@ -44,6 +44,7 @@ router.route('/')
 			}
 		});
 	});
+	// TODO: Put en Delete toevoegen
 
 router.route('/:UserName')
 	.get(function(req, res, next){

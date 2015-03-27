@@ -73,6 +73,7 @@ router.route('/')
 			}
 		});
 	});
+	// TODO: Delete toevoegen
 
 
 

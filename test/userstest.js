@@ -17,19 +17,25 @@ function makeRequest(route, statusCode, done){
 		});
 };
 
+// ----- Wat moet er getest worden -----
+// Controleren op wachtwoord + salt
+
 describe('Testing users route', function(){
 	describe('without params', function(){
 		// Tests without params
 		it('should return list of users', function(){
 			makeRequest('/', 200, function(err, res){
+				console.log(err);
 				if(err){ return done(err); }
 
 				expect(res.body).to.have.property('Admin');
 				expect(res.body.Admin).to.be.a('Boolean');
-				expect(res.body.Admin).to.equal(true);
+				expect(res.body.Admin).to.be.true;
 				done();
 			});
 		});
+		it('should return right password of user');
+		it('should return location');
 	});
 
 	// describe('with params', function(){

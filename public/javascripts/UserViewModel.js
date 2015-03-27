@@ -1,6 +1,7 @@
 //Mapping for the list of users to view models
 //----------------------------mapping----------------------------
 var mapping = {
+
     'users': {
         create: function(options) {
             return new User(options.data);
@@ -103,21 +104,23 @@ function UserViewModel()
 	//Method: Refresh current collection from server
 	self.refresh = function()
 	{
+		console.log('refreshing');
 		$.getJSON("/users", function(users) { 
+			console.log(users);
 			self.users([]);
 			ko.mapping.fromJS({users: users}, mapping, self);
 		});
 	}
 
 	//Method: Turn the current user into a new user
-	self.newUser = function(){
+	/*self.newUser = function(){
 		self.currentUser(new User({
 			firstname: "",
 		    username: ""
 		}));
 		self.currentUser().isNew(true);
 	};
-
+*/
 	//Init
 	self.refresh();
 }

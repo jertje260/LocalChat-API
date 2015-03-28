@@ -1,1 +1,0 @@
-"C:/Program Files/mongo/mongo.exe"

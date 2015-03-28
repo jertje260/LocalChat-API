@@ -8,7 +8,8 @@ var mongoose = require('mongoose');
 var exphbs  = require('express3-handlebars');
 
 // Data Layer Access
-mongoose.connect('mongodb://localhost:27017/LocalChat');
+var dbconfig = require('./config/database.js');
+mongoose.connect(dbconfig.url);
 
 // Models
 require('./models/user')(mongoose);

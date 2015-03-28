@@ -2,8 +2,7 @@
 
 
 	<h4>User management</h4>
-	<strong data-bind="text:users().length">Userlength</strong>
-  	<button type="button" class="btn btn-xs btn-success btn-lg" data-bind="click: newUser, enable: !currentUser.isNew">*New</button>
+  	<button type="button" class="btn btn-xs btn-success btn-lg" data-bind="click: newUser, enable: !currentUser.isNew">New user</button>
  	
  	<div class="row">
   		<div class="col-md-6">
@@ -11,7 +10,6 @@
   			<table class="table table-hover">
 		 		<thead>
 		 			<tr>
-			 			<th>#</th>
 			 			<th>Username</th>
 			 			<th>Display Name</th>
 			 			<th>Radius</th>
@@ -19,10 +17,9 @@
 		 		</thead>
 			 	<tbody data-bind="foreach: users()">
 			        <tr data-bind="click: $root.selectUser, css: { active: isSelected}">
-			           	<td width="200px" data-bind="text: _id"></td>
-			            <td width="200px" data-bind="text: userName"></td>
-			            <td width="200px" data-bind="text: displayName"></td>
-			            <td width="200px" data-bind="text: Radius"></td>
+			            <td width="200px" data-bind="text: UserName"></td>
+			            <td width="200px" data-bind="text: DisplayName"></td>
+			            <td width="200px" data-bind="text: RadiusM"></td>
 
 			        </tr>
 			    </tbody>
@@ -35,7 +32,7 @@
 			  	</tbody>
 			</table>
   		</div>
-  		{{!-- <div class="col-md-6" >
+  		<div class="col-md-6" >
   		
   			<h5>User Details</h5>
 
@@ -45,20 +42,23 @@
 	  				<div class="col-md-6" >
 
 	  					<h5>Detail</h5>
-	  					<p>
-	  						<label data-bind="text: currentUser()._id" />
-	  					</p>
 		  			   	<label>Username</label>
-					    <input type="text" data-bind="value: currentUser().username" />
+					    <input type="text" data-bind="value: currentUser().UserName" />
 					</div>
 	  			</div>
 
 			  	<div class="row">
 			  		<div class="col-md-6" >
-				      	<label>Firstname</label>
-				      	<input type="text" data-bind="value: currentUser().firstname" />
+				      	<label>Display Name</label>
+				      	<input type="text" data-bind="value: currentUser().DisplayName" />
 				    </div>
-	  			</div>   
+	  			</div> 
+	  			<div class="row">
+			  		<div class="col-md-6" >
+				      	<label>Radius</label>
+				      	<input type="number" data-bind="value: currentUser().RadiusM" />
+				    </div>
+	  			</div>     
 			    
 	  			<div class="row">
 	  				<div class="col-md-6" >
@@ -76,7 +76,7 @@
 			  		<p>Currently no user selected</p>
 			  <!-- /ko -->
 
-  		</div> --}}
+  		</div> 
   	</div>
  	
 

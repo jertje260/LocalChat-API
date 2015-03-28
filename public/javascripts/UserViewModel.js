@@ -9,6 +9,7 @@ var mapping = {
     }
 }
 
+
 //Class for user with functions to update and delete
 //---------------------------class User--------------------------
 function User(data)
@@ -16,14 +17,14 @@ function User(data)
 	var self = this;
 
 	self._id = ko.observable(data._id);
-	self.displayName = ko.observable(data.DisplayName);
-	self.userName = ko.observable(data.UserName);
-	self.Radius = ko.observable(data.RadiusM);
+	self.DisplayName = ko.observable(data.DisplayName);
+	self.UserName = ko.observable(data.UserName);
+	self.RadiusM = ko.observable(data.RadiusM);
 
 	self.isSelected = ko.observable(false);
 	self.isNew = ko.observable(false);
 	self.hasChanged = ko.computed(function(){
-		var result = (self.displayName() != data.DisplayName || self.userName() != data.UserName || self.Radius() != data.RadiusM)
+		var result = (self.DisplayName() != data.DisplayName || self.UserName() != data.UserName || self.RadiusM() != data.RadiusM)
 		return result;
 	});
 
@@ -46,7 +47,7 @@ function UserViewModel()
 	self.addUser = function()
 	{
 		var user = ko.mapping.toJSON(self.currentUser());
-
+		console.log(user);
 		$.ajax({
 		    url: '/users', 
 		    type: 'POST', 
@@ -104,23 +105,22 @@ function UserViewModel()
 	//Method: Refresh current collection from server
 	self.refresh = function()
 	{
-		console.log('refreshing');
 		$.getJSON("/users", function(users) { 
-			console.log(users);
 			self.users([]);
 			ko.mapping.fromJS({users: users}, mapping, self);
 		});
 	}
 
 	//Method: Turn the current user into a new user
-	/*self.newUser = function(){
+	self.newUser = function(){
 		self.currentUser(new User({
-			firstname: "",
-		    username: ""
+			DisplayName: "",
+		    UserName: "",
+		    RadiusM:""
 		}));
 		self.currentUser().isNew(true);
 	};
-*/
+
 	//Init
 	self.refresh();
 }

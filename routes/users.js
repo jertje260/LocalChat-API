@@ -15,7 +15,7 @@ router.route('/')
 	})
 	.post(function(req, res, next){ //register new user
 		var User = mongoose.model('User');
-		
+		console.log('new user');
 		var user = new User();
 		user.UserName = req.body.UserName;
 		user.set('password', req.body.password);

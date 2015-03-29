@@ -46,16 +46,9 @@ function handleError(req, res, statusCode, message){
 // Controleren op wachtwoord + salt
 
 describe('Testing users route', function(){
-
 	describe('GET', function(){
 		// Tests without params
 		describe('without params', function(){
-			// Should not return statuscode 200 tests
-			describe('error tests', function(){	
-				it('should return 404 when user is used as route', function(done){
-					makeGetRequest('/user', 404, done);
-				});
-			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
 				it('should return list of users', function(){
@@ -139,21 +132,21 @@ describe('Testing users route', function(){
 			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
-				it('should add user', function(){
-					makePostRequest('/users', 200, function(err, res){
-						if(err){ return done(err); }
+				// it('should add user', function(){
+				// 	makePostRequest('/users', 200, function(err, res){
+				// 		if(err){ return done(err); }
 
-						var User = mongoose.model('User');
-						var user = new User();
+				// 		var User = mongoose.model('User');
+				// 		var user = new User();
 			
-						user.UserName = "Sam";
-						user.DisplayName = "Sam";
+				// 		user.UserName = "Sam";
+				// 		user.DisplayName = "Sam";
 
-						user.set('password', "Test");
+				// 		user.set('password', "Test");
 
-						done();
-					});
-				});
+				// 		done();
+				// 	});
+				// });
 			});
 		});
 		// Tests with params

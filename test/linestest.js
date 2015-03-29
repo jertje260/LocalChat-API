@@ -53,9 +53,9 @@ describe('Testing lines route', function(){
 		describe('without params', function(){
 			describe('error tests', function(){
 				// Should not return statuscode 200 tests
-				it('should return 404 when line is used as route', function(done){
-					makeGetRequest('/line', 404, done);
-				});
+				// it('should return 404 when line is used as route', function(done){
+				// 	makeGetRequest('/line', 404, done);
+				// });
 			});
 			describe('normal tests', function(){
 				// Should return statuscode 200 tests
@@ -122,10 +122,8 @@ describe('Testing lines route', function(){
 				makePostRequest('/lines', 200, function(err, res){
 					if(err){ return done(err); }
 
-					// var Line = mongoose.model('Line');
-					// var line = new Line();
-		
-					
+					var Line = mongoose.model('Line');
+					var line = new Line();
 
 					done();
 				});

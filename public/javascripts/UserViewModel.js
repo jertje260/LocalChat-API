@@ -10,6 +10,17 @@ var mapping = {
 }
 
 
+// validation for passwords.
+/*ko.validation.rules['confirmPasswordMatches'] = {
+    validator: function (val, params) {
+        var otherValue = params;
+        return val === ko.validation.utils.getValue(otherValue);
+    },
+    message: 'Passwords do not match.',
+};
+ko.validation.registerExtenders();*/
+
+
 //Class for user with functions to update and delete
 //---------------------------class User--------------------------
 function User(data)
@@ -19,14 +30,36 @@ function User(data)
 	self._id = ko.observable(data._id);
 	self.DisplayName = ko.observable(data.DisplayName);
 	self.UserName = ko.observable(data.UserName);
-	self.RadiusM = ko.observable(data.RadiusM);
+	self.RadiusM = ko.observable(data.RadiusM).extend(/*{number:true}*/);
+	self.password = ko.observable()/*.extend({
+		required: { 
+			message: 'Password is required',
+			params: true,
+			onlyIf: self.isNew()
+			}
+		})*/;
+	self.passwordConfirm = ko.observable()/*.extend({
+		confirmPasswordMatches: {
+			params: self.password,
+			onlyIf: self.isNew()
+		}
+	})*/;
 
+	self.errors = ko.validation.group(self);
 	self.isSelected = ko.observable(false);
 	self.isNew = ko.observable(false);
-	self.hasChanged = ko.computed(function(){
+	self.hasChanged = ko.computed(function(){ 
+		//var noErrors = (self.errors().length === 0)
 		var result = (self.DisplayName() != data.DisplayName || self.UserName() != data.UserName || self.RadiusM() != data.RadiusM)
+		/*if(result == true && noErrors == true){
+			return true;
+		} else {
+			return false;
+		}*/
 		return result;
+		
 	});
+
 
 	self.editUser = function()
 	{
@@ -46,6 +79,7 @@ function UserViewModel()
 	//Method: Add the current user to the new field
 	self.addUser = function()
 	{
+		if(self.currentUser())
 		var user = ko.mapping.toJSON(self.currentUser());
 		console.log(user);
 		$.ajax({
@@ -116,7 +150,9 @@ function UserViewModel()
 		self.currentUser(new User({
 			DisplayName: "",
 		    UserName: "",
-		    RadiusM:""
+		    RadiusM:"",
+		    password1:"",
+		    password2:""
 		}));
 		self.currentUser().isNew(true);
 	};

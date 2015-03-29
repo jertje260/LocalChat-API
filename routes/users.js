@@ -44,15 +44,50 @@ router.route('/')
 			}
 		});
 	});
+	
 	// TODO: Put en Delete toevoegen
 
 router.route('/:UserName')
 	.get(function(req, res, next){
-		console.log(req.params.UserName);
 		User.findOne({UserName:req.params.UserName} ,function(err, user){
 			res.send(user); 
 		});
-	});
+	})
+	.put(function(req, res, next){
+		User.findOne({UserName:req.params.UserName} ,function(err, user){
+			if(req.body.DisplayName != undefined){
+				user.DisplayName = req.body.DisplayName;
+			}
+			if(req.body.password != undefined){
+				user.password = req.body.password;
+			}
+			if(req.body.RadiusM != undefined){
+				user.RadiusM = req.body.RadiusM;
+			}
+			if(req.body.Role != undefined){
+				user.Role = req.body.Role;
+			}
+			user.save(function(err){
+				if(!err){
+					res.send(user);
+				} else {
+					console.log(err);
+				}
+
+			});
+		});
+	})
+	.delete(function(req, res,next){
+		User.findOne({UserName:req.params.UserName} ,function(err, user){
+			user.remove(function(err){
+				if(!err) {
+					res.send('');
+				} else {
+					console.log(err);
+				}
+			});
+		});
+	});;
 
 
 // Export

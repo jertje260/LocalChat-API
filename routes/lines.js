@@ -80,7 +80,7 @@ router.route('/')
 
 // Export
 module.exports = function (mongoose, errCallback){
-	console.log('Initializing users routing module');
+	console.log('Initializing lines routing module');
 	Line = mongoose.model('Line');
 	handleError = errCallback;
 	return router;

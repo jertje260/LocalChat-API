@@ -3,6 +3,7 @@
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <button id="delete"class="btn btn-danger btn-sm">Remove account</a>
     </div>
 
     <div class="row">
@@ -51,7 +52,7 @@
                 </div> 
                  <div class="row">
                     <div class="details" >
-                        <button type="submit" class="btn btn-xs btn-warning btn-lg" disabled >Save changes</button>
+                        <button type="submit" class="btn btn-xs btn-warning btn-sm" disabled >Save changes</button>
                      </div>
                  </div> 
     </div>
@@ -77,7 +78,7 @@ $(document).ready(function(){
             validpass = false;
         }
 
-        if((DisplayName != DefaultDisplayName && DisplayName != '' ) || (radius != DefaultRadius && radius > 0)|| validpass){
+        if((DisplayName != DefaultDisplayName && DisplayName != '' ) || (radius != DefaultRadius && radius > 0)){
             if(validpass){
                 valid = true;
             }
@@ -89,7 +90,7 @@ $(document).ready(function(){
         if(valid) { 
             $("button[type=submit]").removeAttr("disabled");
         } else {
-            $("button[type=submit]").prop("disabled");
+            $("button[type=submit]").prop("disabled", true);
         }
       });
 
@@ -106,6 +107,19 @@ $(document).ready(function(){
             data: {DisplayName: $('#DisplayName').val(), password: $('#password').val(), RadiusM:  parseInt($('#RadiusM').val())},
             success: function(){
                 window.location.reload(true);
+            }
+
+        })
+      });
+
+       $("#delete").click(function(){
+        var username = $('#Username').text();
+        $.ajax({
+            type: "DELETE",
+            url: "/users/"+ username + "",
+            data: {},
+            success: function(){
+                window.location.href = '/logout';
             }
 
         })

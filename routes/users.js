@@ -32,9 +32,6 @@ router.route('/')
 		if(req.body.Role != undefined){ // might wanna remove this because of security issues.
 			user.Role = req.body.Role;
 		}
-
-		console.log(user);
-		console.log(user.DisplayName);
 		user.save(function(err){
 			if(err){
 				res.send(err + user);

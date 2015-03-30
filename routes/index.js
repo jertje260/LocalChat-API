@@ -69,8 +69,9 @@ function load(){
         res.redirect('/login');
 }
     function isAdmin(req, res, next) {
-        if (req.user && req.user.Role === 'Admin')
-          next();
+        if (req.user && req.user.Role === 'Admin'){
+          return next();
+      }
         else    
             req.flash('loginMessage' , 'You are not authorized to access that page!')
             res.redirect('/login');

@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var express = require('express');
 var app = express();
 require('../models/line')(mongoose);
+require('../models/user')(mongoose);
 var lines = require('../routes/lines')(mongoose, handleError);
 app.use('/lines', lines);
 
@@ -20,15 +21,11 @@ function makeGetRequest(route, statusCode, done){
 		});
 };
 
-function makePostRequest(route, statusCode, done){
-	request(app)
-		.post(route)
-		.expect(statusCode)
-		.end(function(err, res){
-			if(err){ return done(err); }
-
-			done(null, res);
-		});
+function makePostRequest(route, data){ 
+    request(app)
+      .post(route)
+      .send(data)
+      .expect(200);
 };
 
 function handleError(req, res, statusCode, message){
@@ -41,11 +38,6 @@ function handleError(req, res, statusCode, message){
     res.status(statusCode);
     res.json(message);
 };
-
-// ----- Wat moet er getest worden -----
-// Een user ingelogd is als admin
-// Welke berichten moeten worden weergegeven(d.m.v. radius en longitude en latitude)
-
 
 describe('Testing lines route', function(){
 	describe('GET', function(){
@@ -113,19 +105,29 @@ describe('Testing lines route', function(){
 	describe('POST', function(){
 		// Tests without params
 		describe('without params', function(){
-			// Should not return statuscode 200 tests
-			describe('error tests', function(){	
-				
-			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
-				makePostRequest('/lines', 200, function(err, res){
-					if(err){ return done(err); }
-
+				it('should add message', function(){
 					var Line = mongoose.model('Line');
 					var line = new Line();
 
-					done();
+					line.Body = "Dit is een bericht";
+					line.Longitude = 51.5649986;
+					line.Latitude = 5.0671802;
+
+					var User = mongoose.model('User');
+					var user = User();
+
+					User.findOne({ 'UserName': 'Admin' }, 'name occupation', function (err, userVal) {
+						if (err) return handleError(err);
+						user = userVal;
+					});
+
+					line.User = user;
+
+					makePostRequest('/lines', line, function() {
+						done();
+					});
 				});
 			});
 		});

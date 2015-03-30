@@ -20,15 +20,11 @@ function makeGetRequest(route, statusCode, done){
 		});
 };
 
-function makePostRequest(route, statusCode, done){
-	request(app)
-		.post(route)
-		.expect(statusCode)
-		.end(function(err, res){
-			if(err){ return done(err); }
-
-			done(null, res);
-		});
+function makePostRequest(route, data, done){ 
+    request(app)
+      .post(route)
+      .send(data)
+      .expect(200);
 };
 
 function handleError(req, res, statusCode, message){
@@ -41,9 +37,6 @@ function handleError(req, res, statusCode, message){
     res.status(statusCode);
     res.json(message);
 };
-
-// ----- Wat moet er getest worden -----
-// Controleren op wachtwoord + salt
 
 describe('Testing users route', function(){
 	describe('GET', function(){
@@ -65,22 +58,10 @@ describe('Testing users route', function(){
 		});
 		// Tests with params
 		describe('with params', function(){
-			// Should not return statuscode 200 tests
-			describe('error tests', function(){
-				it('should return 400 when user is used as route', function(){
-					makeGetRequest('/users/1', 400, function(err, res){
-						if(err){ return done(err); }
-						
-						// expect(res.params.UserName).to.not.be.an('Integer');
-
-						done();
-					});
-				});
-			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
 				it('should return logged in user', function(){
-					makeGetRequest('/users/Sam', 200, function(err, res){
+					makeGetRequest('/users/Admin', 200, function(err, res){
 						if(err){ return done(err); }
 		
 						var User = mongoose.model('User');
@@ -98,11 +79,11 @@ describe('Testing users route', function(){
 						expect(user.UserName).to.be(res.params.UserName);
 
 						expect(password).to.be.a('String');
-						expect(password).to.be('sam');
+						expect(password).to.be('admin');
 
 						expect(user).to.have.property('DisplayName');
 						expect(user.DisplayName).to.be.a('String');
-						expect(user.DisplayName).to.be('Sam');
+						expect(user.DisplayName).to.be('Admin');
 
 						expect(user).to.have.property('Salt');
 						expect(user.Salt).to.be.a('String');
@@ -115,7 +96,7 @@ describe('Testing users route', function(){
 
 						expect(user).to.have.property('Role');
 						expect(user.Role).to.be.a('String');
-						expect(user.Role).to.be('User');
+						expect(user.Role).to.be('Admin');
 
 						done();
 					});
@@ -132,21 +113,19 @@ describe('Testing users route', function(){
 			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
-				// it('should add user', function(){
-				// 	makePostRequest('/users', 200, function(err, res){
-				// 		if(err){ return done(err); }
+				it('should add user', function(){
+					var User = mongoose.model('User');
+					var user = new User();
 
-				// 		var User = mongoose.model('User');
-				// 		var user = new User();
-			
-				// 		user.UserName = "Sam";
-				// 		user.DisplayName = "Sam";
+					user.UserName = "Sam";
+					user.DisplayName = "Sam";
 
-				// 		user.set('password', "Test");
+					user.set('password', "Test");
 
-				// 		done();
-				// 	});
-				// });
+					makePostRequest('/users', user, function() {
+						done();
+					});
+				});
 			});
 		});
 		// Tests with params

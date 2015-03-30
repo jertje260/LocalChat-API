@@ -9,16 +9,22 @@ require('../models/user')(mongoose);
 var users = require('../routes/users')(mongoose, handleError);
 app.use('/users', users);
 
-function makeRequest(route, statusCode, done){
+function makeGetRequest(route, statusCode, done){
 	request(app)
 		.get(route)
 		.expect(statusCode)
 		.end(function(err, res){
-			console.log("Error: " + err);
 			if(err){ return done(err); }
 
 			done(null, res);
 		});
+};
+
+function makePostRequest(route, data, done){ 
+    request(app)
+      .post(route)
+      .send(data)
+      .expect(200);
 };
 
 function handleError(req, res, statusCode, message){
@@ -32,46 +38,106 @@ function handleError(req, res, statusCode, message){
     res.json(message);
 };
 
-// ----- Wat moet er getest worden -----
-// Controleren op wachtwoord + salt
-
 describe('Testing users route', function(){
-	describe('without params', function(){
+	describe('GET', function(){
 		// Tests without params
-		it('should return list of users', function(done){
-			makeRequest('/users', 200, function(err, res){
-				if(err){ return done(err); }
+		describe('without params', function(){
+			// Should return statuscode 200 tests
+			describe('normal tests', function(){
+				it('should return list of users', function(){
+					makeGetRequest('/users', 200, function(err, res){
+						if(err){ return done(err); }
 
-				expect(res.body).to.have.property('Admin');
-				expect(res.body.Admin).to.be.a('Boolean');
-				expect(res.body.Admin).to.be.true;
-				done();
+						expect(res.body).to.have.property('Admin');
+						expect(res.body.Admin).to.be.a('Boolean');
+						expect(res.body.Admin).to.be.true;
+						done();
+					});
+				});
 			});
 		});
-		it('should return right user', function(done){
-			makeRequest('/users', 200, function(err, res){
-				if(err){ return done(err); }
+		// Tests with params
+		describe('with params', function(){
+			// Should return statuscode 200 tests
+			describe('normal tests', function(){
+				it('should return logged in user', function(){
+					makeGetRequest('/users/Admin', 200, function(err, res){
+						if(err){ return done(err); }
+		
+						var User = mongoose.model('User');
+						var user = new User();
+						user.UserName = res.body.UserName;
+						user.DisplayName = res.body.DisplayName;
+						user.HashedPass = res.body.HashedPass;
+						user.Salt = res.body.Salt;
+						user.Role = res.body.Role;
 
-				expect(res.body).to.have.property('UserName');
-				expect(res.body.UserName).to.equal(req.params.username);
-				done();
-			});
-		});
-		// it('should return location', function(done){
-		it('should return location', function(){
-			makeRequest('/users', 200, function(err, res){
-				if(err){ return done(err); }
+						var password = user.get('password');
 
-				expect(res.body).to.have.property('RadiusM');
-				expect(res.body.RadiusM).to.be.a('Number');
-				expect(res.body.Admin).to.be(500);
-				done();
+						expect(user).to.have.property('UserName');
+						expect(user.UserName).to.be.a('String');
+						expect(user.UserName).to.be(res.params.UserName);
+
+						expect(password).to.be.a('String');
+						expect(password).to.be('admin');
+
+						expect(user).to.have.property('DisplayName');
+						expect(user.DisplayName).to.be.a('String');
+						expect(user.DisplayName).to.be('Admin');
+
+						expect(user).to.have.property('Salt');
+						expect(user.Salt).to.be.a('String');
+						expect(user.Salt).to.not.be.undefined;
+
+						expect(user).to.have.property('HashedPass');
+						expect(user.HashedPass).to.be.a('String');
+						var hash = crypto.createHmac('sha1', user.Salt).update(password).digest('hex');
+						expect(user.HashedPass).to.be(hash);
+
+						expect(user).to.have.property('Role');
+						expect(user.Role).to.be.a('String');
+						expect(user.Role).to.be('Admin');
+
+						done();
+					});
+				});
 			});
 		});
 	});
+	describe('POST', function(){
+		// Tests without params
+		describe('without params', function(){
+			// Should not return statuscode 200 tests
+			describe('error tests', function(){	
+				
+			});
+			// Should return statuscode 200 tests
+			describe('normal tests', function(){
+				it('should add user', function(){
+					var User = mongoose.model('User');
+					var user = new User();
 
-	// describe('with params', function(){
-	// 	// Tests with params
-		
-	// });
+					user.UserName = "Sam";
+					user.DisplayName = "Sam";
+
+					user.set('password', "Test");
+
+					makePostRequest('/users', user, function() {
+						done();
+					});
+				});
+			});
+		});
+		// Tests with params
+		describe('with params', function(){
+			// Should not return statuscode 200 tests
+			describe('error tests', function(){
+				
+			});
+			// Should return statuscode 200 tests
+			describe('normal tests', function(){
+				
+			});
+		});
+	});
 });

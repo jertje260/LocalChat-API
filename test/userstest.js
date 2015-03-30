@@ -125,6 +125,14 @@ describe('Testing users route', function(){
 					makePostRequest('/users', user, function() {
 						done();
 					});
+
+					// makePostRequest('/users', user, function() {
+					// 	user.save(function(err){
+					// 		if (err) throw err;
+					// 		console.log("Test");
+					// 		done();
+					// 	});
+					// });
 				});
 			});
 		});

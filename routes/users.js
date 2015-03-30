@@ -45,7 +45,6 @@ router.route('/')
 		});
 	});
 	
-	// TODO: Put en Delete toevoegen
 
 router.route('/:UserName')
 	.get(function(req, res, next){
@@ -58,10 +57,10 @@ router.route('/:UserName')
 			if(req.body.DisplayName != undefined){
 				user.DisplayName = req.body.DisplayName;
 			}
-			if(req.body.password != undefined){
+			if(req.body.password != undefined || req.body.password != ""){
 				user.password = req.body.password;
 			}
-			if(req.body.RadiusM != undefined){
+			if(req.body.RadiusM != undefined ){
 				user.RadiusM = req.body.RadiusM;
 			}
 			if(req.body.Role != undefined){

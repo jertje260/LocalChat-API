@@ -30,7 +30,7 @@ function User(data)
 	self._id = ko.observable(data._id);
 	self.DisplayName = ko.observable(data.DisplayName);
 	self.UserName = ko.observable(data.UserName);
-	self.RadiusM = ko.observable(data.RadiusM).extend(/*{number:true}*/);
+	self.RadiusM = ko.observable(data.RadiusM)/*.extend({number:true})*/;
 	self.password = ko.observable()/*.extend({
 		required: { 
 			message: 'Password is required',

@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var exphbs  = require('express3-handlebars');
-//var flash = require('connect-flash');
+var flash = require('connect-flash');
 var passport = require('passport');
 var session = require('express-session');
 
@@ -33,11 +33,19 @@ function handleError(req, res, statusCode, message){
 
 var app = express();
 
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 // required for passport
-//app.use(session({ secret: 'ilikewhatilikeandifidontlikeit' })); // session secret
-//app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(session({ secret: 'ilikewhatilikeandifidontlikeit' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 
 // Routes
@@ -57,13 +65,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 

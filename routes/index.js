@@ -5,7 +5,7 @@ var passport;
 function load(){
     /* GET home page. */
     router.get('/', function(req, res, next) {
-      res.render('home.handlebars');
+      res.render('home');
     });
 
     /* GET users page. */
@@ -20,50 +20,56 @@ function load(){
 
     /* GET login page. */
     router.get('/login', function(req, res, next) {
-      res.render('login');
+        res.render('login' , { message: req.flash('loginMessage')});
+
     });
 
     /* POST login page */
     router.post('/login', 
       passport.authenticate('local-login',  {
         successRedirect : '/profile',
-        failureRedirect : '/login'
+        failureRedirect : '/login',
+        failureFlash: true
     }));
 
 
     /* GET signup page */
     router.get('/signup', function(req, res, next) {
-        res.render('signup');
+        res.render('signup', { message: req.flash('signupMessage') });
     });
 
     /* POST signup page */
     router.post('/signup', passport.authenticate('local-signup',  {
         successRedirect : '/profile',
-        failureRedirect : '/signup'
+        failureRedirect : '/signup',
+        failureFlash: true
     }));
 
     /* GET profile page*/
     router.get('/profile', isLoggedIn, function(req, res, next) {
-        res.render('profile');
+        res.render('profile', {user : req.user});
     });
+
 
     /* LOGOUT */
     router.get('/logout', function(req, res, next) {
         req.logout();
         res.redirect('/');
     });
+
+        // route middleware to make sure a user is logged in
+        function isLoggedIn(req, res, next) {
+
+        // if user is authenticated in the session, carry on 
+        if (req.isAuthenticated())
+            return next();
+
+        // if they aren't redirect them to the home page
+        res.redirect('/');
+}
 }
 
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
-        return next();
-
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
 
 
 

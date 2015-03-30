@@ -6,21 +6,110 @@
     </div>
 
     <div class="row">
-
-        <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
+                <h3><span class="fa fa-user"></span> {{user.UserName}}'s Info</h3>
 
                     <p>
-                        <strong>Username</strong>: {{user.UserName }}<br>
-                        <strong>Display Name</strong>: {{user.DisplayName }}<br>
-                        <strong>Radius</strong>: {{user.RadiusM }}
+                        <strong>Username</strong>: <span id="Username">{{user.UserName }}</span><br>
+                        <strong>Display Name</strong>: <span id="DefaultDisplayName">{{user.DisplayName }}</span><br>
+                        <strong>Radius</strong>: <span id="DefaultRadius">{{user.RadiusM}}</span>
                     </p>
+
 
             </div>
         </div>
 
     </div>
+    <div>
+        <div class="row">
+                
+                    <div class="details">
+                        <h2> Change settings</h2>
+                        <label>Display Name</label>
+                        <input type="text" id="DisplayName" value="{{user.DisplayName}}" name="DisplayName" />
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="details" >
+                        <label>Radius</label>
+                        <input type="number" id="RadiusM" value="{{user.RadiusM}}" name="RadiusM" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="details" >
+                        <h4>Change password</h4>
+                        <label>Password</label>
+                        <input type="password" id="password" name="password" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="details" >
+                        <label>Confirm password</label>
+                        <input type="password" id="passwordConfirm" name="passwordConfirm" />
+                    </div>
+                </div> 
+                 <div class="row">
+                    <div class="details" >
+                        <button type="submit" class="btn btn-xs btn-warning btn-lg" disabled >Save changes</button>
+                     </div>
+                 </div> 
+    </div>
 
 </div>
+<script>
+$(document).ready(function(){
+      
+
+      $('input').change(function(){
+        var valid = false;
+        var validpass = false;
+        var DefaultRadius = $('#DefaultRadius').text();
+        var DefaultDisplayName = $('#DefaultDisplayName').text();
+        var DisplayName = $('#DisplayName').val();
+        var radius = $('#RadiusM').val();
+        var password = $('#password').val();
+        var passwordConf = $('#passwordConfirm').val();
+
+        if(password === passwordConf){
+            validpass = true;
+        } else {
+            validpass = false;
+        }
+
+        if((DisplayName != DefaultDisplayName && DisplayName != '' ) || (radius != DefaultRadius && radius > 0)|| validpass){
+            if(validpass){
+                valid = true;
+            }
+            else {
+                valid = false;
+            }
+        }
+
+        if(valid) { 
+            $("button[type=submit]").removeAttr("disabled");
+        } else {
+            $("button[type=submit]").prop("disabled");
+        }
+      });
+
+      $('#DisplayName').trigger('change');
+      $('#RadiusM').trigger('change');
+      $('#password').trigger('change');
+      $('#passwordConfirm').trigger('change');
+
+      $("button[type=submit]").click(function(){
+        var username = $('#Username').text();
+        $.ajax({
+            type: "PUT",
+            url: "/users/"+ username + "",
+            data: {DisplayName: $('#DisplayName').val(), password: $('#password').val(), RadiusM:  parseInt($('#RadiusM').val())},
+            success: function(){
+                window.location.reload(true);
+            }
+
+        })
+      });
+
+});
+</script>

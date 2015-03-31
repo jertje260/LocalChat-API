@@ -1,6 +1,7 @@
 function init(mongoose){
+	var userFunctions = require('../userFunctions.js');
 	var crypto = require('crypto');
-	console.log('Initializing user schema');
+	// console.log('Initializing user schema');
 	var userSchema = new mongoose.Schema
 	({
 		UserName: {type: String, required: true, unique: true},
@@ -12,14 +13,7 @@ function init(mongoose){
 	});
 
 	userSchema.virtual('password')
-		.set(function(password){
-			if(password != undefined){		
-				this._password = password;
-				this.Salt = this.makeSalt();
-				this.HashedPass = this.encryptPassword(password);
-				console.log('setting pass');
-			}
-		})
+		.set(userFunctions.setPassword)
 		.get(function() { return this._password; });
 
 	userSchema.methods.authenticate =  function authenticate(plainText) {
@@ -30,18 +24,13 @@ function init(mongoose){
 		return Math.round((new Date().valueOf() * Math.random())) + '';
 	};
 
-	userSchema.methods.encryptPassword = function encryptPassword(password){
+	userSchema.methods.encryptPassword = function encryptPassword(password) {
 		return crypto.createHmac('sha1', this.Salt).update(password).digest('hex');
 	};
 
 	userSchema.pre('save', function(next) {
-		if(this.password == 'undefined'){
-			next(new Error('Invalid password'));
-		} else {
-			next();
-		}
+		if(this.password == 'undefined') { next(new Error('Invalid password')); } else { next(); }
 	});
-
 
 	module.exports = mongoose.model('User', userSchema);
 }

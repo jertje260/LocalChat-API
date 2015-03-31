@@ -22,10 +22,33 @@ function makeGetRequest(route, statusCode, done){
 
 function makePostRequest(route, data, done){ 
     request(app)
-      .post(route)
-      .send(data)
-      .expect(200);
+		.post(route)
+		.send(data)
+		.expect(200);
 };
+
+function makePutRequest(route, data, done){
+	request(app)
+		.put(route)
+		.send(data)
+		.expect('Content-Type', /json/)
+		.expect(200) //Status code
+		.end(function(err,res) {
+			if (err) { return err; }
+
+			done(null, res);
+		});
+};
+
+function makeDeleteRequest(route, done){
+	request(app)
+		.delete(route)
+        .end(function(err, res) {
+            if (err) { return err; }
+
+            done(null, res);
+        });
+}
 
 function handleError(req, res, statusCode, message){
     console.log();
@@ -125,26 +148,56 @@ describe('Testing users route', function(){
 					makePostRequest('/users', user, function() {
 						done();
 					});
-
-					// makePostRequest('/users', user, function() {
-					// 	user.save(function(err){
-					// 		if (err) throw err;
-					// 		console.log("Test");
-					// 		done();
-					// 	});
-					// });
 				});
 			});
 		});
+	});
+	describe('PUT', function(){
 		// Tests with params
 		describe('with params', function(){
-			// Should not return statuscode 200 tests
-			describe('error tests', function(){
-				
-			});
 			// Should return statuscode 200 tests
 			describe('normal tests', function(){
-				
+				it('should update user', function(){
+					var User = mongoose.model('User');
+					var user = new User();
+
+					user.DisplayName = "Admin";
+
+					user.set('password', "Test");
+
+					makePutRequest('/users/Admin', user, function() {
+
+						// Should.js fluent syntax applied
+						expect(res.body).should.have.property('DisplayName');
+						expect(res.body.DisplayName).to.be('Admin');
+
+						var password = user.get('password');
+
+						expect(password).to.be.a('String');
+						expect(password).to.be('Test');
+
+						expect(res.body).should.have.property('Role');
+						expect(res.body.Role).to.be('User');
+
+						expect(res.body).should.have.property('RadiusM');
+						expect(res.body.RadiusM).to.be(500);
+
+						done();
+					});
+				});
+			});
+		});
+	});
+	describe('DELETE', function(){
+		// Tests with params
+		describe('with params', function(){
+			// Should return statuscode 200 tests
+			describe('normal tests', function(){
+				it('should add user', function(){
+					makeDeleteRequest('/users/Admin', function() {
+						done();
+					});
+				});
 			});
 		});
 	});

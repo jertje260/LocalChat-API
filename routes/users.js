@@ -6,6 +6,8 @@ var handleError;
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
 
+require('../functions.js');
+
 // Routing
 router.route('/')
 	.get(function(req, res, next){
@@ -35,6 +37,8 @@ router.route('/')
 
 		console.log(user);
 		console.log(user.DisplayName);
+		
+		// user.save(saveUser);
 		user.save(function(err){
 			if(err){
 				res.send(err + user);

@@ -1,3 +1,66 @@
-<a href="/profile" class="btn btn-default btn-sm">Profile</a>
-	<a href="/management" class="btn btn-default btn-sm">Management</a>
-	<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Chat Page</h1>
+		<a href="/profile" class="btn btn-default btn-sm">Profile</a>
+		<a href="/management" class="btn btn-default btn-sm" id="management">Management</a>
+		<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
+	</div>
+
+	<label id="Role" hidden>{{user.Role}}</label>
+	<label id="DisplayName" hidden>{{user.DisplayName}}</label>
+	<label id="username" hidden>{{user.UserName}}</label>
+
+	<div class="row">
+				<ul id="messages"></ul>
+				<input id="msg" autocomplete="off" placeholder="type here to send"/><button id="msgbutton" class="btn btn-default btn-success btn-sm " disabled>Send</button>
+	</div>
+</div>
+
+<script>
+	var DisplayName = $('#DisplayName').text();
+	var UserName = $('#username').text();
+	var socket = io.connect();
+
+	socket.emit("join", DisplayName, UserName);
+
+	socket.on('join', function(UserName, DisplayName){
+		$('#messages').append( '<li>The user ' + UserName + ' with name ' + DisplayName + ' joined the chat</li>');
+	});
+
+	socket.on('msg', function(data){
+
+		//console.log(DisplayName + " send at: " + date + " message: " + msg);
+	});
+
+	socket.on('join', function(DisplayName){
+		console.log(DisplayName + " joined the chat.");
+	});
+</script>
+
+<script>
+	$(document).ready(function(){
+	    if($('#Role').text()!= "Admin"){
+	        $('#management').hide();
+	    }
+	    if(navigator.geolocation){
+	    	navigator.geolocation.getCurrentPosition(showPos, error);
+	    } else {
+	    	console.log('no geolocation');
+	    }
+	    function error(error){
+	    	if(error.code == error.PERMISSION_DENIED){
+	    		console.log('no access to location');
+	    	}
+	    }
+	    function showPos(position){
+	    	console.log(position);
+	    }
+
+	});
+</script>
+
+
+

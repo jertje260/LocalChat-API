@@ -13,9 +13,10 @@ function load(){
         res.render('users', {user : req.user});
     });
 
-    /*  GET chat page. */
+    /* GET chat page. */
     router.get('/chat', isLoggedIn, function(req, res, next) {
-        res.render('chat' , {user : req.user});
+      res.render('chat' , {user : req.user});
+
     });
 
     /*  GET login page. */

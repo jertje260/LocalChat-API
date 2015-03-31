@@ -6571,3 +6571,10 @@ button.close {
     display: none !important;
   }
 }
+
+#msg { 
+  border: 0; padding: 10px; width: 92%; margin-right: .5%;  margin-left: 15px; margin-right: 15px;}
+#msgbutton { padding: 10px; height:40px;}
+#messages { list-style-type: none; margin-left: 15px; margin-right: 15px; padding: 0; }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }

@@ -1,13 +1,13 @@
 <script src="javascripts/knockout.mapping-latest.js" type="text/javascript"></script>
 <script src="/javascripts/UserViewModel.js" type="text/javascript" ></script>
-
-
-	<h4>User management</h4>
-	<button type="button" class="btn btn-default btn-success btn-sm" data-bind="click: newUser, enable: !currentUser.isNew">New user</button>
-	<a href="/profile" class="btn btn-default btn-sm">Profile</a>
-	<a href="/chat" class="btn btn-default btn-sm">Chat</a>
-	<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
-  	
+<div class="container">
+	<div class="page-header text-center">
+	    <h1><span class="fa fa-anchor"></span> Management Page</h1>
+		<button type="button" class="btn btn-default btn-success btn-sm" data-bind="click: newUser, enable: !currentUser.isNew">New user</button>
+		<a href="/profile" class="btn btn-default btn-sm">Profile</a>
+		<a href="/chat" class="btn btn-default btn-sm">Chat</a>
+		<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
+  	</div>
  	
  	<div class="row">
   		<div class="col-md-6">

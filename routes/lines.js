@@ -47,7 +47,8 @@ router.route('/')
 			Latitude: req.body.Latitude * (pi/180),
 			User: req.body.User
 		});
-		bus.emit('bus chat msg', { "msg" : req.body.Body, "date" : Date.now(), "DisplayName" : line.User.DisplayName});
+		console.log(line);
+		bus.emit('bus chat msg', line, Date.now(), line.User);
 		
 		line.save(function(err, line) { if(err) { res.send(err); } else { res.send({ msg: "" + line.Body + ": was send." }); } });
 	});

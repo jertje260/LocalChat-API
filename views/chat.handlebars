@@ -31,9 +31,9 @@
 		$('#messages').append( '<li>The user ' + UserName + ' with name ' + DisplayName + ' joined the chat</li>');
 	});
 
-	socket.on('msg', function(data){
-
-		//console.log(DisplayName + " send at: " + date + " message: " + msg);
+	socket.on('msg', function(DisplayName, date, msg){
+		$('#messages').append( '<li>['+ date + '] ' + DisplayName + ': ' + msg + '</li>');
+		console.log(DisplayName + " send at: " + date + " message: " + msg);
 	});
 
 	socket.on('join', function(DisplayName){
@@ -46,11 +46,13 @@
 	    if($('#Role').text()!= "Admin"){
 	        $('#management').hide();
 	    }
+
 	    if(navigator.geolocation){
 	    	navigator.geolocation.getCurrentPosition(showPos, error);
 	    } else {
 	    	console.log('no geolocation');
 	    }
+
 	    function error(error){
 	    	if(error.code == error.PERMISSION_DENIED){
 	    		alert('location is required to chat!');
@@ -60,18 +62,17 @@
 	    	console.log(position);
 	    }
 
-	    $("button[type=submit]").click(function(){
-        var username = $('#Username').text();
-        $.ajax({
-            type: "POST",
-            url: "/lines",
-            data: {DisplayName: $('#DisplayName').val(), password: $('#password').val(), RadiusM:  parseInt($('#RadiusM').val())},
-            success: function(){
-                window.location.reload(true);
-            }
+	    $("#msgbutton").click(function(){
+	        var username = $('#Username').text();
+	        $.ajax({
+	            type: "POST",
+	            url: "/lines",
+	            data: {},
+	            success: function(){
+	            }
 
-        })
-    });
+	        });
+	    });
 
 	});
 </script>

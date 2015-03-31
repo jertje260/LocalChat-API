@@ -1,19 +1,5 @@
-var express = require('express');
-var router = express.Router();
-var _ = require('underscore');
-var handleError;
-
-var Line;
-
-// Routing
-/*
-Suppose we want to find places within a distance d=1000 km from M=(lat, lon)=(1.3963, -0.6981) in a database. 
-
-Given that we have a table named Places with columns Lat and Lon that hold the coordinates in radians, then we could use this SQL query:
-SELECT * FROM Places WHERE acos(sin(1.3963) * sin(Lat) + cos(1.3963) * cos(Lat) * cos(Lon - (-0.6981))) * 6371 <= 1000;
-*/
-router.route('/')
-	.get(function(req, res, next) {
+module.exports = {
+	getLines: function(Line, req, res) {
 		if(req.query.Latitude != undefined && req.query.Longitude != undefined && req.query.Radius != undefined) {
 			// Magic calculation for circle
 			var pi = 3.14159265358979323846264338327950288419716939937510,
@@ -26,17 +12,13 @@ router.route('/')
 			Line.find().where('Latitude').gt(Latmin).lt(Latmax)
 				.where('Longitude').gte(LongMin).lte(LongMax)
 				.populate('User').exec(function(err, result){
-				if(err) {
-					res.send(err);
-				} else {
-					res.json(result);
-				}
+				if(err) { res.send(err); } else { res.json(result); }
 			});
 		} else {
 			Line.find().populate('User').exec(function(err, result) { res.json(result); });
 		}
-	})
-	.post(function(Line, req, res) {
+	},
+	postLine: function(User, req, res) {
 		var line = new Line({
 			Body: req.body.Body,
 			Longitude: req.body.Longitude * (pi/180),
@@ -45,14 +27,5 @@ router.route('/')
 		});
 		
 		line.save(function(err, line) { if(err) { res.send(err); } else { res.send({ msg: "" + line.Body + ": was send." }); } });
-	});
-	
-	// TODO: Delete toevoegen
-
-// Export
-module.exports = function (mongoose, errCallback){
-	// console.log('Initializing lines routing module');
-	Line = mongoose.model('Line');
-	handleError = errCallback;
-	return router;
+	}
 };

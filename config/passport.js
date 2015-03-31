@@ -16,14 +16,13 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        var User = {id : user.id, UserName : user.UserName, DisplayName : user.DisplayName, Role: user.Role, RadiusM : user.RadiusM}
+        done(null, User);
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user);
-        });
+    passport.deserializeUser(function(User, done) {
+        done(null, User);
     });
 
     // =========================================================================

@@ -1,10 +1,13 @@
+var mongoose = require('mongoose');
+var Line = mongoose.model('Line');
+var User = mongoose.model('User');
+var events = require('events');
+var bus = require('./bus');
+var io;
+
 module.exports = function(server){
-	var mongoose = require('mongoose');
-	var Line = mongoose.model('Line');
-	var User = mongoose.model('User');
-	var events = require('events');
-	var bus = require('./bus');
-	var io = require('socket.io').listen(server, { log: false});
+
+	io = require('socket.io').listen(server, { log: false});
 	console.log('socket.io created.');
 
 	io.on('connection', function(socket){
@@ -14,12 +17,11 @@ module.exports = function(server){
 		});
 
 	
-		socket.on('join', function(person){
-			User
-			socket.UserName = person.UserName;
-			socket.DisplayName = person.DisplayName;
-			io.emit('msg' , person.UserName + " joined the room with " + person.DisplayName + " as name.");
-			console.log(socket.UserName + " joined the room with " + person.DisplayName + " as name.");
+		socket.on('join', function(DisplayName, UserName){
+			socket.UserName = UserName;
+			socket.DisplayName = DisplayName;
+			io.emit('join', UserName, DisplayName);
+			console.log(socket.UserName + " joined with " + socket.DisplayName + " as name.");
 		});
 		
 		socket.on('disconnect', function(){

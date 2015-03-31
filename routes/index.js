@@ -14,7 +14,7 @@ function load(){
     });
 
     /* GET chat page. */
-    router.get('/chat', isLoggedIn, isAdmin, function(req, res, next) {
+    router.get('/chat', isLoggedIn, function(req, res, next) {
       res.render('chat' , {user : req.user});
     });
 

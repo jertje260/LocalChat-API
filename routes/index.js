@@ -9,13 +9,13 @@ function load(){
     });
 
     /* GET users page. */
-    router.get('/management', function(req, res, next) {
-      res.render('users');
+    router.get('/management', isLoggedIn, isAdmin, function(req, res, next) {
+      res.render('users', {user : req.user});
     });
 
     /* GET chat page. */
-    router.get('/chat', function(req, res, next) {
-      res.render('chat');
+    router.get('/chat', isLoggedIn, isAdmin, function(req, res, next) {
+      res.render('chat' , {user : req.user});
     });
 
     /* GET login page. */
@@ -65,8 +65,18 @@ function load(){
             return next();
 
         // if they aren't redirect them to the home page
-        res.redirect('/');
+        req.flash('loginMessage', 'You are not logged in!');
+        res.redirect('/login');
 }
+    function isAdmin(req, res, next) {
+        if (req.user && req.user.Role === 'Admin'){
+          return next();
+      }
+        else    
+            req.flash('loginMessage' , 'You are not authorized to access that page!')
+            res.redirect('/login');
+      }
+    
 }
 
 

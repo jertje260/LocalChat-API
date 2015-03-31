@@ -1,11 +1,19 @@
+
+
+
+    
+
 <div class="container">
+
 
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        <a href="/management" class="btn btn-default btn-sm" id="management">management</a>
+        <a href="/chat" class="btn btn-default btn-sm" id="chat">chat</a>
+        <a href="/logout" class="btn btn-warning btn-sm">Logout</a>
         <button id="delete"class="btn btn-danger btn-sm">Remove account</a>
     </div>
-
+    <label type="hidden" id="Role">{{user.Role}}</label>
     <div class="row">
         <div class="col-sm-6">
             <div class="well">
@@ -60,9 +68,9 @@
 </div>
 <script>
 $(document).ready(function(){
-      
 
-      $('input').change(function(){
+
+    $('input').change(function(){
         var valid = false;
         var validpass = false;
         var DefaultRadius = $('#DefaultRadius').text();
@@ -92,14 +100,14 @@ $(document).ready(function(){
         } else {
             $("button[type=submit]").prop("disabled", true);
         }
-      });
+    });
 
-      $('#DisplayName').trigger('change');
-      $('#RadiusM').trigger('change');
-      $('#password').trigger('change');
-      $('#passwordConfirm').trigger('change');
+    $('#DisplayName').trigger('change');
+    $('#RadiusM').trigger('change');
+    $('#password').trigger('change');
+    $('#passwordConfirm').trigger('change');
 
-      $("button[type=submit]").click(function(){
+    $("button[type=submit]").click(function(){
         var username = $('#Username').text();
         $.ajax({
             type: "PUT",
@@ -110,9 +118,9 @@ $(document).ready(function(){
             }
 
         })
-      });
+    });
 
-       $("#delete").click(function(){
+    $("#delete").click(function(){
         var username = $('#Username').text();
         $.ajax({
             type: "DELETE",
@@ -123,7 +131,14 @@ $(document).ready(function(){
             }
 
         })
-      });
+    });
+
+    if($('#Role').text()!= "Admin"){
+        $('#management').hide();
+        $('#chat').hide();
+    }
+
+       
 
 });
 </script>

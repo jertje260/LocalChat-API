@@ -45,7 +45,6 @@ function User(data)
 		}
 	})*/;
 
-	self.errors = ko.validation.group(self);
 	self.isSelected = ko.observable(false);
 	self.isNew = ko.observable(false);
 	self.hasChanged = ko.computed(function(){ 

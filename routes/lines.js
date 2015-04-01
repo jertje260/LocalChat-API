@@ -12,7 +12,7 @@ var User;
 // Routing
 router.route('/')
 	.get(function(req, res, next){
-		if(req.query.Latitude != undefined && req.query.Longitude != undefined && req.query.Radius != undefined){
+		if(req.query.Latitude != undefined && !isNaN(req.query.Latitude) && req.query.Longitude != undefined && !isNaN(req.query.Longitude) && req.query.Radius != undefined && !isNaN(req.query.Radius)){
 			// Magic calculation for circle
 
 			var Radius = (req.query.Radius/1000) /* radius in km */, Long = req.query.Longitude * (pi/180),
@@ -86,6 +86,7 @@ router.route('/')
 function isInteger(x) {
         return Math.round(x) === x;
     }
+
 
 // Export
 module.exports = function (mongoose, errCallback){

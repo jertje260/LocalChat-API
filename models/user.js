@@ -18,7 +18,7 @@ function init(mongoose){
 				this._password = password;
 				this.Salt = this.makeSalt();
 				this.HashedPass = this.encryptPassword(password);
-				console.log('setting pass');
+				// console.log('setting pass');
 			}
 		})
 		.get(function() { return this._password; });

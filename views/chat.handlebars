@@ -36,6 +36,7 @@
 	});
 
 	socket.on('msg', function(line){
+		console.log(line);
 		var datearray = line.Datetime.split("T");
 		var date = datearray[0];
 		var time = datearray[1].split(".")[0];

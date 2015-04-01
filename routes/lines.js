@@ -10,15 +10,9 @@ var Line;
 var User;
 
 // Routing
-/*
-Suppose we want to find places within a distance d=1000 km from M=(lat, lon)=(1.3963, -0.6981) in a database. 
-
-Given that we have a table named Places with columns Lat and Lon that hold the coordinates in radians, then we could use this SQL query:
-SELECT * FROM Places WHERE acos(sin(1.3963) * sin(Lat) + cos(1.3963) * cos(Lat) * cos(Lon - (-0.6981))) * 6371 <= 1000;
-*/
 router.route('/')
 	.get(function(req, res, next){
-		if(req.query.Latitude != undefined && req.query.Longitude != undefined && req.query.Radius != undefined){
+		if(req.query.Latitude != undefined && !isNaN(req.query.Latitude) && req.query.Longitude != undefined && !isNaN(req.query.Longitude) && req.query.Radius != undefined && !isNaN(req.query.Radius)){
 			// Magic calculation for circle
 
 			var Radius = (req.query.Radius/1000) /* radius in km */, Long = req.query.Longitude * (pi/180),
@@ -27,18 +21,50 @@ router.route('/')
 				DeltaLong = Math.acos((Math.cos(r)-Math.sin(latT)*Math.sin(Lat))/(Math.cos(latT)*Math.cos(Lat))),
 				LongMax = Long + DeltaLong, LongMin = Long - DeltaLong;
 
-			// Now only checking in a squarish pattern for the messages, the commented part needs to be changed, so it checks in a circle.
-			Line.find().where('Latitude').gte(Latmin).lte(Latmax)
+			// Paging enabled?
+			if(req.query.Page != null && isInteger(parseInt(req.query.Page))){
+				var Amount;
+				var Page = req.query.Page;
+				if(req.query.Amount != null && isInteger(parseInt(req.query.Amount))) {
+					Amount = req.query.Amount;
+				} else {
+					Amount = 20;
+				}
+				Line.find().where('Latitude').gte(Latmin).lte(Latmax)
 				.where('Longitude').gte(LongMin).lte(LongMax)
-				.populate('User').exec(function(err, result){
+				.populate('User').sort({Datetime: 'desc'}).skip((Page -1)*Amount).limit(Amount).exec(function(err, result){
 				if(err){
 					res.send(err);
 				} else {
 					res.json(result);
 				}
 			});
+			} else {
+				// Now only checking in a squarish pattern for the messages
+				Line.find().where('Latitude').gte(Latmin).lte(Latmax)
+					.where('Longitude').gte(LongMin).lte(LongMax)
+					.populate('User').sort({Datetime: 'desc'}).exec(function(err, result){
+						if(err){
+							res.send(err);
+						} else {
+							res.json(result);
+						}
+					});
+			}
 		} else {
-			Line.find().populate('User').exec(function(err, result) { res.json(result); });
+			// Paging enabled?
+			if(req.query.Page != null && isInteger(parseInt(req.query.Page))){
+				var Amount;
+				var Page = req.query.Page;
+				if(req.query.Amount != null && isInteger(parseInt(req.query.Amount))) {
+					Amount = req.query.Amount;
+				} else {
+					Amount = 20;
+				}
+				Line.find().populate('User').sort({Datetime: 'desc'}).skip((Page -1)*Amount).limit(Amount).exec(function(err, result) { res.json(result); });
+			} else {
+			Line.find().populate('User').sort({Datetime: 'desc'}).exec(function(err, result) { res.json(result); });
+			}
 		}
 	})
 	.post(function(req, res, next) {
@@ -56,6 +82,10 @@ router.route('/')
 			} 
 		});
 	});
+
+function isInteger(x) {
+        return Math.round(x) === x;
+    }
 
 
 // Export

@@ -8,10 +8,11 @@
 		<a href="/management" class="btn btn-default btn-sm" id="management">Management</a>
 		<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
 	</div>
-	<label id="Id" hidden>{{user.id}}</label>
-	<label id="Role" hidden>{{user.Role}}</label>
-	<label id="DisplayName" hidden>{{user.DisplayName}}</label>
-	<label id="username" hidden>{{user.UserName}}</label>
+	<input id="Id" type="hidden" value="{{user.id}}"/>
+	<input id="Role" type="hidden" value="{{user.Role}}"/>
+	<input id="DisplayName" type="hidden" value="{{user.DisplayName}}"/>
+	<input id="username" type="hidden" value="{{user.UserName}}"/>
+
 
 	<div class="row">
 		<ul id="messages"></ul>
@@ -23,7 +24,7 @@
 </div>
 
 <script>
-	var UserName = $('#username').text();
+	var UserName = $('#username').val();
 	var socket = io.connect();
 	var geolocationEnabled = false;
 	var sendAllowed = false;
@@ -50,7 +51,7 @@
 	    	navigator.geolocation.getCurrentPosition(function(data){
 	    		var lat = data.coords.latitude;
 	    		var lon = data.coords.longitude;
-	    		var id = $('#Id').text();
+	    		var id = $('#Id').val();
 	    		var body = $('input').val();
 	    		socket.emit('send msg', body, id, lat , lon);
 	    		$('input').val('');
@@ -81,7 +82,7 @@
 	$(document).ready(function(){
 		
 
-	    if($('#Role').text()!= "Admin"){
+	    if($('#Role').val()!= "Admin"){
 	        $('#management').hide();
 	    }
 	    

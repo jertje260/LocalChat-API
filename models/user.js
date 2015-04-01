@@ -1,7 +1,7 @@
 function init(mongoose){
-	var userFunctions = require('../userFunctions.js');
+	// var userFunctions = require('../testFunctions/userFunctions.js');
 	var crypto = require('crypto');
-	// console.log('Initializing user schema');
+	console.log('Initializing user schema');
 	var userSchema = new mongoose.Schema
 	({
 		UserName: {type: String, required: true, unique: true},
@@ -13,7 +13,14 @@ function init(mongoose){
 	});
 
 	userSchema.virtual('password')
-		.set(userFunctions.setPassword)
+		.set(function(password) {
+			if(password != undefined){		
+				this._password = password;
+				this.Salt = this.makeSalt();
+				this.HashedPass = this.encryptPassword(password);
+				console.log('setting pass');
+			}
+		})
 		.get(function() { return this._password; });
 
 	userSchema.methods.authenticate =  function authenticate(plainText) {

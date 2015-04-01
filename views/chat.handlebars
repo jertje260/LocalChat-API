@@ -36,7 +36,6 @@
 	});
 
 	socket.on('msg', function(line){
-		console.log(line);
 		var datearray = line.Datetime.split("T");
 		var date = datearray[0];
 		var time = datearray[1].split(".")[0];
@@ -53,7 +52,7 @@
 	    		var lat = data.coords.latitude;
 	    		var lon = data.coords.longitude;
 	    		var id = $('#Id').val();
-	    		var body = $('input').val();
+	    		var body = $('#msg').val();
 	    		socket.emit('send msg', body, id, lat , lon);
 	    		$('input').val('');
 	    		$('#msgbutton').prop('disabled', true);

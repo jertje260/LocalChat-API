@@ -41,7 +41,9 @@
 		$('#messages').append( '<li>['+ date + ":" + time + '] ' + line.User.DisplayName + ': ' + line.Body + '</li>');	
 	});
 
-
+	socket.on('disconnect', function(User){
+		$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
+	});
 
 	function send(){
 		if(sendAllowed){

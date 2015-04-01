@@ -43,9 +43,10 @@ module.exports = function(server){
 		});
 		
 		socket.on('disconnect', function(){
-			var message = "An user disconnected";
-			console.log(message);
-			io.sockets.emit("disconnect", message);
+			if(socket.user != undefined){
+				console.log(socket.user.UserName + " disconnected.");
+				io.sockets.emit("disconnect", socket.user);
+			}
 		});
 	});
 

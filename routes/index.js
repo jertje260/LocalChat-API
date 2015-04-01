@@ -10,12 +10,12 @@ function load(){
 
     /* GET users page. */
     router.get('/management', isLoggedIn, isAdmin, function(req, res, next) {
+
       res.render('users', {user : req.session.passport.user});
     });
 
     /* GET chat page. */
     router.get('/chat', isLoggedIn, function(req, res, next) {
-
       res.render('chat' , {user : req.session.passport.user});
     });
 

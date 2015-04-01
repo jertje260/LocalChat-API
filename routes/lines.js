@@ -7,6 +7,7 @@ var events = require('events');
 var bus = require('../sockets/bus');
 
 var Line;
+var User;
 
 // Routing
 /*
@@ -40,17 +41,20 @@ router.route('/')
 			Line.find().populate('User').exec(function(err, result) { res.json(result); });
 		}
 	})
-	.post(function(Line, req, res) {
-		var line = new Line({
-			Body: req.body.Body,
-			Longitude: req.body.Longitude * (pi/180),
-			Latitude: req.body.Latitude * (pi/180),
-			User: req.body.User
+	.post(function(req, res, next) {
+		var line = new Line();
+		line.Body = req.body.Body;
+		line.Longitude = req.body.Longitude * (pi/180);
+		line.Latitude = req.body.Latitude * (pi/180);
+		line.User = req.body.User;
+		line.save(function(err, line) { 
+			if(err) { 
+				res.send(err); 
+			} else { 
+				bus.emit('bus chat msg', line._id);
+				res.send({ msg: "" + line.Body + ": was send." }); 
+			} 
 		});
-		console.log(line);
-		bus.emit('bus chat msg', line, Date.now(), line.User);
-		
-		line.save(function(err, line) { if(err) { res.send(err); } else { res.send({ msg: "" + line.Body + ": was send." }); } });
 	});
 
 
@@ -58,6 +62,7 @@ router.route('/')
 module.exports = function (mongoose, errCallback){
 	console.log('Initializing lines routing module');
 	Line = mongoose.model('Line');
+	User = mongoose.model('User');
 	handleError = errCallback;
 	return router;
 };

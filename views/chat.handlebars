@@ -8,10 +8,11 @@
 		<a href="/management" class="btn btn-default btn-sm" id="management">Management</a>
 		<a href="/logout" class="btn btn-warning btn-sm">Logout</a>
 	</div>
-	<label id="Id" hidden>{{user.id}}</label>
-	<label id="Role" hidden>{{user.Role}}</label>
-	<label id="DisplayName" hidden>{{user.DisplayName}}</label>
-	<label id="username" hidden>{{user.UserName}}</label>
+	<input id="Id" type="hidden" value="{{user.id}}"/>
+	<input id="Role" type="hidden" value="{{user.Role}}"/>
+	<input id="DisplayName" type="hidden" value="{{user.DisplayName}}"/>
+	<input id="username" type="hidden" value="{{user.UserName}}"/>
+
 
 	<div class="row">
 		<ul id="messages"></ul>
@@ -23,7 +24,7 @@
 </div>
 
 <script>
-	var UserName = $('#username').text();
+	var UserName = $('#username').val();
 	var socket = io.connect();
 	var geolocationEnabled = false;
 	var sendAllowed = false;
@@ -42,14 +43,16 @@
 		$('#messages').append( '<li>['+ date + ":" + time + '] ' + line.User.DisplayName + ': ' + line.Body + '</li>');	
 	});
 
-
+	socket.on('disconnect', function(User){
+		$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
+	});
 
 	function send(){
 		if(sendAllowed){
 	    	navigator.geolocation.getCurrentPosition(function(data){
 	    		var lat = data.coords.latitude;
 	    		var lon = data.coords.longitude;
-	    		var id = $('#Id').text();
+	    		var id = $('#Id').val();
 	    		var body = $('input').val();
 	    		socket.emit('send msg', body, id, lat , lon);
 	    		$('input').val('');
@@ -80,7 +83,7 @@
 	$(document).ready(function(){
 		
 
-	    if($('#Role').text()!= "Admin"){
+	    if($('#Role').val()!= "Admin"){
 	        $('#management').hide();
 	    }
 	    
@@ -88,11 +91,21 @@
 	    if(navigator.geolocation){
 	    	navigator.geolocation.getCurrentPosition(function(){
 	    		geolocationEnabled = true;
-	    	}, function(err){
-	    		if(error.code == error.PERMISSION_DENIED){
-	    			geolocationEnabled = false;
-	    			alert('You need to allow location to send messages');
-	    		}
+	    	}, function(error){
+	    		switch(error.code) {
+		        case error.PERMISSION_DENIED:
+		            alert("Geolocation must be enabled to chat");
+		            break;
+		        case error.POSITION_UNAVAILABLE:
+		            alert("Location information is unavailable.");
+		            break;
+		        case error.TIMEOUT:
+		            alert("The request to get user location timed out.");
+		            break;
+		        case error.UNKNOWN_ERROR:
+		            alert("An unknown error occurred.");
+		            break;
+		   		}
 	    	});
 	    } else{
 	    	alert('Your browser doesn\'t support location');

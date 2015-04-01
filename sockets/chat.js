@@ -17,7 +17,7 @@ module.exports = function(server){
 		socket.on('join', function(UserName){
 
 			User.findOne({UserName:UserName}, function(err, user) { 
-					if(!err){
+					if(!err && user != null){
 						socket.user = user;
 						io.sockets.emit('join', socket.user);
 						console.log(socket.user.UserName + " joined with " + socket.user.DisplayName + " as name.");
@@ -43,9 +43,10 @@ module.exports = function(server){
 		});
 		
 		socket.on('disconnect', function(){
-			var message = "An user disconnected";
-			console.log(message);
-			io.sockets.emit("disconnect", message);
+			if(socket.user != null){
+				console.log(socket.user.UserName + " disconnected.");
+				io.sockets.emit("disconnect", socket.user);
+			}
 		});
 	});
 

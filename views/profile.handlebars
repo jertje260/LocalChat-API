@@ -8,7 +8,7 @@
         <a href="/logout" class="btn btn-warning btn-sm">Logout</a>
         <button id="delete"class="btn btn-danger btn-sm">Remove account</a>
     </div>
-    <label id="Role" hidden>{{user.Role}}</label>
+    <input id="Role" type="hidden" value="{{user.Role}}"/>
     <div class="row">
         <div class="col-sm-6">
             <div class="well">
@@ -128,7 +128,7 @@ $(document).ready(function(){
         })
     });
 
-    if($('#Role').text()!= "Admin"){
+    if($('#Role').val()!= "Admin"){
         $('#management').hide();
     }
 

@@ -87,11 +87,21 @@
 	    if(navigator.geolocation){
 	    	navigator.geolocation.getCurrentPosition(function(){
 	    		geolocationEnabled = true;
-	    	}, function(err){
-	    		if(error.code == error.PERMISSION_DENIED){
-	    			geolocationEnabled = false;
-	    			alert('You need to allow location to send messages');
-	    		}
+	    	}, function(error){
+	    		switch(error.code) {
+		        case error.PERMISSION_DENIED:
+		            alert("Geolocation must be enabled to chat");
+		            break;
+		        case error.POSITION_UNAVAILABLE:
+		            alert("Location information is unavailable.");
+		            break;
+		        case error.TIMEOUT:
+		            alert("The request to get user location timed out.");
+		            break;
+		        case error.UNKNOWN_ERROR:
+		            alert("An unknown error occurred.");
+		            break;
+		   		}
 	    	});
 	    } else{
 	    	alert('Your browser doesn\'t support location');

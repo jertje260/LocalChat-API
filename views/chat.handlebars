@@ -24,8 +24,8 @@
 </div>
 
 <script>
-	var UserName;
-	var UserId;
+	var UserName; = $('#username').val();
+	var UserId = $('#Id').val();
 	var socket = io.connect();
 	var geolocationEnabled = false;
 	var sendAllowed = false;
@@ -52,7 +52,7 @@
 	    	navigator.geolocation.getCurrentPosition(function(data){
 	    		var lat = data.coords.latitude;
 	    		var lon = data.coords.longitude;
-	    		var id = userId;
+	    		var id = UserId;
 	    		var body = $('#msg').val();
 	    		socket.emit('send msg', body, id, lat , lon);
 	    		$('input').val('');
@@ -81,9 +81,7 @@
      });
 
 	$(document).ready(function(){
-		UserName = $('#username').val();
-		UserId = $('#Id').val();
-		socket.emit("join", UserName);
+		
 
 	    if($('#Role').val()!= "Admin"){
 	        $('#management').hide();

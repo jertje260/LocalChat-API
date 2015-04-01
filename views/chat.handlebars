@@ -83,6 +83,7 @@
 	$(document).ready(function(){
 		UserName = $('#username').val();
 		UserId = $('#Id').val();
+		socket.emit("join", UserName);
 
 	    if($('#Role').val()!= "Admin"){
 	        $('#management').hide();

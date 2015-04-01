@@ -8,9 +8,13 @@ var User;
 // Routing
 router.route('/')
 	.get(function(req, res, next) {
+		console.log(req.query.UserName);
+		if(req.query.UserName != null){
+			res.redirect('/users/' + req.query.UserName + '');
+		} else {
 		// console.log(User);
-		User.find(function(err, result) { console.log("Result"); res.json(result); });
-	})
+		User.find(function(err, result) {  res.json(result); });
+	}})
 	.post(function(req, res, next) { 
 		// console.log(req.route);
 		

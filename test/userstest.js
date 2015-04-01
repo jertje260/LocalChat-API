@@ -12,8 +12,7 @@ require('../models/user')(mongoose);
 var users = require('../routes/users')(mongoose, handleError);
 app.use('/users', users);
 
-var User = mongoose.model('User');
-
+// Functions
 function makeGetRequest(route, statusCode, done) {
 	request(app)
 		.get(route)
@@ -71,6 +70,7 @@ function handleError(req, res, statusCode, message) {
     res.json(message);
 };
 
+// Tests
 describe('Testing users route', function() {
 	describe('GET', function() {
 		// Tests without params
@@ -98,7 +98,8 @@ describe('Testing users route', function() {
 					makeGetRequest('/users/Admin', 200, function(err, res) {
 						if(err){ return done(err); }
 		
-						user = new User();
+						var User = mongoose.model('User');
+						var user = new User();
 						user.UserName = res.body.UserName;
 						user.DisplayName = res.body.DisplayName;
 						user.HashedPass = res.body.HashedPass;
@@ -210,8 +211,10 @@ describe('Testing users route', function() {
 				it('should add user', function() {
 					makeDeleteRequest('/users/Sam', function(err, res) {
 						if(err){ return done(err); }
-						user = User.findOne({UserName:req.params.UserName}, function(err, user) { return user; });
+						var oneUser = User.findOne({UserName:req.params.UserName}, function(err, user) { return user; });
 
+						expect(oneUser).to.not.be.undefined;
+						
 						done();
 					});
 				});

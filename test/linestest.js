@@ -13,6 +13,7 @@ require('../models/user')(mongoose);
 var lines = require('../routes/lines')(mongoose, handleError);
 app.use('/lines', lines);
 
+// Functions
 function makeGetRequest(route, statusCode, done){
 	request(app)
 		.get(route)
@@ -42,6 +43,7 @@ function handleError(req, res, statusCode, message){
     res.json(message);
 };
 
+// Tests
 describe('Testing lines route', function(){
 	describe('GET', function(){
 		// Tests without params

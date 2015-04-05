@@ -9,6 +9,9 @@ var User;
 router.route('/')
 	.get(getUsers)
 	.post(postUser);
+
+router.route('/login')
+	.post(login);
 	
 router.route('/:UserName')
 	.get(getUser)
@@ -61,6 +64,26 @@ function deleteUser(req, res, next) {
 		user.remove(function(err) { if(!err) { res.send(''); } else { console.log(err); } });
 	});
 }
+
+function login(req, res, next) {
+	var tempuser;
+	User.findOne({UserName:req.body.UserName} , function(err, user){
+		if(err){
+			res.send("User not found");
+		}
+		else {
+			if(!user.authenticate(req.body.password)){
+				res.send("Password incorrect");
+			} else {
+				res.send(user);
+			}
+		}
+	});
+}
+
+	
+	
+
 
 // Export
 module.exports = function (mongoose, errCallback){

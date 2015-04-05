@@ -21,11 +21,14 @@ function User(data)
 	self.DisplayName = ko.observable(data.DisplayName);
 	self.UserName = ko.observable(data.UserName);
 	self.RadiusM = ko.observable(data.RadiusM);
+	self.password = ko.observable();
+	self.passwordConfirm = ko.observable();
+
 
 	self.isSelected = ko.observable(false);
 	self.isNew = ko.observable(false);
 	self.hasChanged = ko.computed(function(){ 
-		var result = (self.DisplayName() != data.DisplayName || self.UserName() != data.UserName || self.RadiusM() != data.RadiusM);
+		var result = (self.DisplayName() != data.DisplayName || self.UserName() != data.UserName || self.RadiusM() != data.RadiusM || (self.password() != '' && self.passwordConfirm() === self.password()));
 		return result;
 		
 	});
@@ -120,7 +123,9 @@ function UserViewModel()
 		self.currentUser(new User({
 			DisplayName: "",
 		    UserName: "",
-		    RadiusM:""
+		    RadiusM:"",
+		    password:"",
+		    passwordConfirm:""
 		}));
 		self.currentUser().isNew(true);
 	};

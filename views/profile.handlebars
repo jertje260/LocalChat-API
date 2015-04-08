@@ -104,7 +104,6 @@ $(document).ready(function(){
 
     $("button[type=submit]").click(function(){
         var username = $('#Username').text();
-        if($('#password').val() == ""){
         $.ajax({
             type: "PUT",
             url: "/users/"+ username + "",
@@ -114,6 +113,7 @@ $(document).ready(function(){
             }
 
         });
+    
     });
 
     $("#delete").click(function(){
@@ -126,7 +126,7 @@ $(document).ready(function(){
                 window.location.href = '/logout';
             }
 
-        })
+        });
     });
 
     if($('#Role').val()!= "Admin"){

@@ -51,7 +51,7 @@ function getUser(req, res, next) {
 function putUser(req, res, next) {
 	User.findOne({UserName:req.params.UserName}, function(err, user){
 		if(req.body.DisplayName != undefined) { user.DisplayName = req.body.DisplayName; }
-		if(req.body.password != undefined || req.body.password != "") { user.password = req.body.password; }
+		if(req.body.password != undefined && req.body.password != "") { user.password = req.body.password; }
 		if(req.body.RadiusM != undefined ) { user.RadiusM = req.body.RadiusM; }
 		if(req.body.Role != undefined) { user.Role = req.body.Role; }
 
@@ -66,7 +66,7 @@ function deleteUser(req, res, next) {
 }
 
 function login(req, res, next) {
-	var tempuser;
+	
 	User.findOne({UserName:req.body.UserName} , function(err, user){
 		if(err){
 			res.send("User not found");

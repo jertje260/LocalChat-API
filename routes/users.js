@@ -68,7 +68,7 @@ function deleteUser(req, res, next) {
 function login(req, res, next) {
 	
 	User.findOne({UserName:req.body.UserName} , function(err, user){
-		if(err){
+		if(user == null){
 			res.send("User not found");
 		}
 		else {

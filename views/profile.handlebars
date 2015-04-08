@@ -105,27 +105,15 @@ $(document).ready(function(){
     $("button[type=submit]").click(function(){
         var username = $('#Username').text();
         if($('#password').val() == ""){
-            $.ajax({
-                type: "PUT",
-                url: "/users/"+ username + "",
-                data: {DisplayName: $('#DisplayName').val(), RadiusM:  parseInt($('#RadiusM').val())},
-                success: function(){
-                    window.location.reload(true);
-                }
+        $.ajax({
+            type: "PUT",
+            url: "/users/"+ username + "",
+            data: {DisplayName: $('#DisplayName').val(), password: $('#password').val(), RadiusM:  parseInt($('#RadiusM').val())},
+            success: function(){
+                window.location.reload(true);
+            }
 
-            })
-        } else {
-            if($('#password').val() == ""){
-            $.ajax({
-                type: "PUT",
-                url: "/users/"+ username + "",
-                data: {DisplayName: $('#DisplayName').val(), password: $('#password').val(), RadiusM:  parseInt($('#RadiusM').val())},
-                success: function(){
-                    window.location.reload(true);
-                }
-
-            })
-        }
+        });
     });
 
     $("#delete").click(function(){

@@ -40,6 +40,11 @@ function getLine(req, res, next) {
 			if(err){
 				res.send(err);
 			} else {
+				result.forEach(function(line){
+					line.Latitude = (line.Latitude / (pi/180));
+					line.Longitude = (line.Longitude / (pi/180));
+				});	
+				
 				res.json(result);
 			}
 		});
@@ -47,7 +52,15 @@ function getLine(req, res, next) {
 			// Now only checking in a squarish pattern for the messages
 			Line.find().where('Latitude').gte(Latmin).lte(Latmax)
 				.where('Longitude').gte(LongMin).lte(LongMax)
-				.populate('User').sort({Datetime: 'desc'}).exec(function(err, result) { if(err) { res.send(err); } else { res.json(result); } });
+				.populate('User').sort({Datetime: 'desc'}).exec(function(err, result) { if(err) { res.send(err); } else { 
+					result.forEach(function(line){
+					line.Latitude = (line.Latitude / (pi/180));
+					line.Longitude = (line.Longitude / (pi/180));
+				});	
+				
+					res.json(result); 
+				} 
+			});
 		}
 	} else {
 		// Paging enabled?
@@ -59,9 +72,20 @@ function getLine(req, res, next) {
 			} else {
 				Amount = 20;
 			}
-			Line.find().populate('User').sort({Datetime: 'desc'}).skip((Page -1)*Amount).limit(Amount).exec(function(err, result) { res.json(result); });
+			Line.find().populate('User').sort({Datetime: 'desc'}).skip((Page -1)*Amount).limit(Amount).exec(function(err, result) { 
+				result.forEach(function(line){
+					line.Latitude = (line.Latitude / (pi/180));
+					line.Longitude = (line.Longitude / (pi/180));
+				});	
+				res.json(result); 
+			});
 		} else {
-		Line.find().populate('User').sort({Datetime: 'desc'}).exec(function(err, result) { res.json(result); });
+		Line.find().populate('User').sort({Datetime: 'desc'}).exec(function(err, result) { 
+			result.forEach(function(line){
+					line.Latitude = (line.Latitude / (pi/180));
+					line.Longitude = (line.Longitude / (pi/180));
+				});	
+			res.json(result); });
 		}
 	}
 }
@@ -75,7 +99,7 @@ function postLine(req, res, next) {
 	});
 	line.save(function(err, line) {
 		if(err) { res.send(err); }
-		else { bus.emit('bus chat msg', line._id); res.send({ msg: "" + line.Body + ": was send." }); } 
+		else { bus.emit('bus chat msg', line._id); res.send(line); } 
 	});
 }
 

@@ -44,7 +44,8 @@
 	});
 
 	socket.on('disconnect', function(User){
-		$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
+		if (User.DisplayName != undefined && User.DisplayName != null)
+			$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
 	});
 
 	function send(){

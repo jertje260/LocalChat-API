@@ -14,11 +14,12 @@ module.exports = function(server){
 
 	io.on('connection', function(socket){
 		sock = socket;
-		socket.on('join', function(UserName){
+		socket.on('join', function(UserName, location){
 
 			User.findOne({UserName:UserName}, function(err, user) { 
 					if(!err && user != null){
 						socket.user = user;
+						socket.user.location = location;
 						io.sockets.emit('join', socket.user);
 						console.log(socket.user.UserName + " joined with " + socket.user.DisplayName + " as name.");
 					}

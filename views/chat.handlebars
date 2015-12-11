@@ -34,14 +34,15 @@
 	socket.emit("join", UserName);
 
 	socket.on('join', function(User){
-		$('#messages').append( '<li>The user ' + User.UserName + ' with name ' + User.DisplayName + ' joined the chat</li>');
+		// $('#messages').append( '<li>The user ' + User.UserName + ' with name ' + User.DisplayName + ' joined the chat</li>');
+		$('#messages').append( '<li>' + User.DisplayName + ' joined the chat.<a onclick="getUserList()">User list</a></li>');
 	});
 
 	socket.on('msg', function(line){
-		var datearray = line.Datetime.split("T");
+		var datearray = line.Location.Datetime.split("T");
 		var date = datearray[0];
 		var time = datearray[1].split(".")[0];
-		$('#messages').append( '<li><a onclick="getPlaces(' + line.Latitude + ', ' + line.Longitude + ')">['+ date + ":" + time + '] ' + line.User.DisplayName + ':</a> ' + line.Body + '</li>');	
+		$('#messages').append( '<li><a onclick="getPlaces(' + line.Location.Latitude + ', ' + line.Location.Longitude + ')">['+ date + ":" + time + '] ' + line.User.DisplayName + ':</a> ' + line.Body + '</li>');	
 	});
 
 	socket.on('disconnect', function(User){
@@ -87,6 +88,10 @@
     	var latitude = lat/(pi/180);
     	var longitude = longi/(pi/180);
     	console.log('clicked for places ' + latitude + ', ' + longitude);
+    }
+
+    function getUserList(){
+    	console.log("Print users");
     }
 
 	$(document).ready(function(){

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Line = mongoose.model('Line');
 var User = mongoose.model('User');
+var Location = mongoose.model('Location');
 var events = require('events');
 var bus = require('./bus');
 
@@ -26,20 +27,25 @@ module.exports = function(server){
 		});
 
 		socket.on('send msg', function(body, userid, lat, lon){
+			var location = new Location();
+			location.Longitude = lon * (pi/180);
+			location.Latitude = lat * (pi/180);
+
+			location.save(function(err, line) {
+				if (err) { console.log(err); }
+			});
+
 			var line = new Line();
 			line.Body = body;
-			line.Longitude = lon * (pi/180);
-			line.Latitude = lat * (pi/180);
 			line.User = userid;
+			line.Location = location._id;
 			line.save(function(err, line) { 
 				if(!err) { 
 					bus.emit('bus chat msg', line._id);
-				} 
-				else {
+				} else {
 					console.log(err);
 				}
 			});
-
 		});
 		
 		socket.on('disconnect', function(){
@@ -51,11 +57,12 @@ module.exports = function(server){
 	});
 
 	bus.on('bus chat msg', function(lineId){
-		Line.findById(lineId).populate('User').exec(function(err, result){
+		Line.findById(lineId).populate('User').populate('Location').exec(function(err, result){
 			if(!err) {
+				console.log(result);
 				io.sockets.emit('msg', result);
 				console.log('Message from ' + result.User.DisplayName + ': ' + result.Body);
 			}
-		});		
+		});
 	});
 }

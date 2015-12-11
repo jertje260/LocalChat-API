@@ -21,8 +21,14 @@
 			<button id="msgbutton" class="btn btn-default btn-success btn-sm " disabled>Send</button>
 		</div>
 	</div>
-	<div id="overlay" style="display:none;">
-		<h2> Places nearby</h2>
+	<div id="overlay" style="display:none;" >
+		<h2 id="overlayTitle"> Places nearby</h2>
+		<table id="overlayTable">
+			<tr>
+			<th>Name</th>
+			<th>Location</th>
+			</tr>
+		</table>
 	</div>
 </div>
 
@@ -52,6 +58,7 @@
 		if (User.DisplayName != undefined && User.DisplayName != null)
 			$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
 	});
+
 
 	function send(){
 		if(sendAllowed){
@@ -86,9 +93,16 @@
         }
      });
 
+
     function getPlaceNearby(lat,longi){
     	
-    	console.log('clicked for places ' + latitude + ', ' + longitude);
+    	console.log('clicked for places ' + lat + ', ' + longi);
+
+		socket.emit('get location', longi, lat);
+		// process data return.
+
+		$('#overlay').show();
+
     	/*$.ajax({
     		type: "GET",
     		url: ,//
@@ -99,7 +113,7 @@
     		}
 
     	});*/
-    	$('overlay').unhide();
+		
     	/*
     	$.ajax({
     		type: "GET",
@@ -123,6 +137,13 @@
 
 	$(document).ready(function(){
 		
+		
+		$('#overlay').click(function (e) {
+			$('#overlay').hide();
+		});
+
+		// Hide the "info_image_click" by clicking outside container
+	
 
 	    if($('#Role').val()!= "Admin"){
 	        $('#management').hide();

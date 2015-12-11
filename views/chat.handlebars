@@ -21,6 +21,9 @@
 			<button id="msgbutton" class="btn btn-default btn-success btn-sm " disabled>Send</button>
 		</div>
 	</div>
+	<div id="overlay" style="display:none;">
+		<h2> Places nearby</h2>
+	</div>
 </div>
 
 <script>
@@ -41,7 +44,7 @@
 		var datearray = line.Datetime.split("T");
 		var date = datearray[0];
 		var time = datearray[1].split(".")[0];
-		$('#messages').append( '<li><a onclick="getPlaces(' + line.Latitude + ', ' + line.Longitude + ')">['+ date + ":" + time + '] ' + line.User.DisplayName + ':</a> ' + line.Body + '</li>');	
+		$('#messages').append( '<li><a onclick="getPlaceNearby(' + line.Latitude + ', ' + line.Longitude + ')">['+ date + ":" + time + '] ' + line.User.DisplayName + ':</a> ' + line.Body + '</li>');	
 	});
 
 	socket.on('disconnect', function(User){
@@ -82,11 +85,35 @@
         }
      });
 
-    function getPlaces(lat,longi){
+    function getPlaceNearby(lat,longi){
     	
-    	var latitude = lat/(pi/180);
-    	var longitude = longi/(pi/180);
     	console.log('clicked for places ' + latitude + ', ' + longitude);
+    	/*$.ajax({
+    		type: "GET",
+    		url: ,//
+    		data: {Latitude: lat, Longitude: longi}
+    		success: function(response){
+    			// create the overview with the places in a table
+
+    		}
+
+    	});*/
+    	$('overlay').unhide();
+    	/*
+    	$.ajax({
+    		type: "GET",
+			url: "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ latitude + ',' + longitude+"&rankby=distance&types=cafe&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew",
+			datatype: 'JSON'
+			headers: {Access-Control-Allow-Origin = "Access-Control-Allow-Origin"}
+
+		})
+		.done(function( data ) {
+		    if ( console && console.log ) {
+		      console.log( "Sample of data:", data );
+		    }
+		});*/
+    	
+
     }
 
 	$(document).ready(function(){

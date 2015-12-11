@@ -24,6 +24,7 @@
 </div>
 
 <script>
+	var pi = 3.14159265358979323846264338327950288419716939937510;
 	var UserName = $('#username').val();
 	var UserId = $('#Id').val();
 	var socket = io.connect();
@@ -40,7 +41,7 @@
 		var datearray = line.Datetime.split("T");
 		var date = datearray[0];
 		var time = datearray[1].split(".")[0];
-		$('#messages').append( '<li>['+ date + ":" + time + '] ' + line.User.DisplayName + ': ' + line.Body + '</li>');	
+		$('#messages').append( '<li><a onclick="getPlaces(' + line.Latitude + ', ' + line.Longitude + ')">['+ date + ":" + time + '] ' + line.User.DisplayName + ':</a> ' + line.Body + '</li>');	
 	});
 
 	socket.on('disconnect', function(User){
@@ -80,6 +81,13 @@
 			sendAllowed = false;
         }
      });
+
+    function getPlaces(lat,longi){
+    	
+    	var latitude = lat/(pi/180);
+    	var longitude = longi/(pi/180);
+    	console.log('clicked for places ' + latitude + ', ' + longitude);
+    }
 
 	$(document).ready(function(){
 		

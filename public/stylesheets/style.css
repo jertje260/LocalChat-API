@@ -6577,6 +6577,7 @@ button.close {
 #msgbutton { padding: 10px; height:40px; width: 10%; float: right;}
 #messages { list-style-type: none; margin-left: 15px; margin-right: 15px; padding: 0; }
 #messages li { padding: 5px 10px; }
+#messages li a:hover{ display: pointer; }
 #messages li:nth-child(odd) { background: #eee; }
 #message {margin-left: 15px; margin-right: 15px;}
 

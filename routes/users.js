@@ -56,6 +56,9 @@ function putUser(req, res, next) {
 		if(req.body.Role != undefined) { user.Role = req.body.Role; }
 
 		user.save(function(err) { if(!err) { res.send(user); } else { console.log(err); } });
+
+		req.session.passport.user.DisplayName = user.DisplayName;
+		req.session.passport.user.RadiusM = user.RadiusM;
 	});
 }
 

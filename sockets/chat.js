@@ -26,7 +26,7 @@ module.exports = function(server){
 				});
 		});
 
-		socket.on('send msg', function(body, userid, lat, lon){
+		socket.on('send msg', function(body, userid, lon, lat){
 			var location = new Location();
 			location.Longitude = lon * (pi/180);
 			location.Latitude = lat * (pi/180);
@@ -53,6 +53,25 @@ module.exports = function(server){
 				console.log(socket.user.UserName + " disconnected.");
 				io.sockets.emit("disconnect", socket.user);
 			}
+		});
+
+		socket.on('get location', function(lon, lat, callback) {
+			var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lon + "," + lat + "&rankby=distance&types=cafe&types=bar&types=restaurant&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew";
+
+	        https.get(url,function(response){
+	            var data = '';
+	            response.on('data',function(d){
+	                data += d;
+	            });
+	            response.on('end',function(){
+	                try {
+	                    data = JSON.parse(data);
+	                } catch (err) {
+	                    return handleError(req, res, 500, err); 
+	                }
+	                callback(data.results[0]);
+	            });
+	        });
 		});
 	});
 

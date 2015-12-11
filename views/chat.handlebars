@@ -60,7 +60,7 @@
 	    		var lon = data.coords.longitude;
 	    		var id = UserId;
 	    		var body = $('#msg').val();
-	    		socket.emit('send msg', body, id, lat , lon);
+	    		socket.emit('send msg', body, id, lon, lat);
 	    		$('input').val('');
 	    		$('#msgbutton').prop('disabled', true);
     			sendAllowed = false;

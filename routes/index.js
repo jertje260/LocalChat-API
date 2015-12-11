@@ -2,15 +2,17 @@ var express = require('express');
 var router = express.Router();
 var passport;
 
+var https = require('https');
+
 function load(){
 
     router.get('/', function(req, res, next) {
-        res.render('home');
+        if (req.session.passport.user) { res.redirect('/profile'); }
+        else { res.render('home'); }
     });
 
     /* GET users page. */
     router.get('/management', isLoggedIn, isAdmin, function(req, res, next) {
-
       res.render('users', {user : req.session.passport.user});
     });
 
@@ -66,6 +68,7 @@ function isLoggedIn(req, res, next) {
     req.flash('loginMessage', 'You are not logged in!');
     res.redirect('/login');
 }
+
 function isAdmin(req, res, next) {
     if (req.user && req.user.Role === 'Admin') { return next(); }
     else { req.flash('loginMessage' , 'You are not authorized to access that page!'); res.redirect('/login'); }

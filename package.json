@@ -15,7 +15,8 @@
     "express": "~4.12.2",
     "express-handlebars": "*",
     "express3-handlebars": "*",
-    "mongoose": "^3.8.24",
+    
+    "mongoose": "^4.1.5",
     "morgan": "~1.5.1",
     "nodemon": "*",
     "serve-favicon": "~2.2.0",

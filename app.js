@@ -19,6 +19,7 @@ mongoose.connect(dbconfig.url);
 // Models
 require('./models/user')(mongoose);
 require('./models/line')(mongoose);
+require('./models/location')(mongoose);
 require('./config/passport')(passport);
 
 function handleError(req, res, statusCode, message){

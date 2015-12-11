@@ -2,7 +2,6 @@ function init(mongoose){
 	// var userFunctions = require('../testFunctions/userFunctions.js');
 	var crypto = require('crypto');
 	console.log('Initializing user schema');
-	require('./location');
 	var userSchema = new mongoose.Schema
 	({
 		UserName: {type: String, required: true, unique: true},
@@ -10,8 +9,7 @@ function init(mongoose){
 		HashedPass: {type: String, required: true},
 		Salt: {type: String, required: true},
 		Role: {type: String, default: 'User', enum: ['User', 'Admin']},
-		RadiusM: {type: Number, default: 500}, // radius in meters
-		LastLocation:{type: mongoose.Schema.Types.ObjectId, ref: 'Location'}
+		RadiusM: {type: Number, default: 500} // radius in meters
 	});
 
 	userSchema.virtual('password')

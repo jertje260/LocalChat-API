@@ -35,7 +35,7 @@ function postUser(req, res, next) {
 	user.UserName = req.body.UserName;
 	user.set('password', req.body.password);
 	
-	 console.log(user);
+	// console.log(user);
 
 	if(req.body.DisplayName != undefined) { user.DisplayName = req.body.DisplayName; } else { user.DisplayName = user.UserName; }
 	if(req.body.RadiusM != undefined) { user.RadiusM = req.body.RadiusM; }

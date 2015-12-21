@@ -23,7 +23,7 @@
 	</div>
 	<div id="overlay" style="display:none;" >
 		<h2 id="overlayTitle"> Places nearby</h2>
-		<table id="overlayTable">
+		<table id="overlayTable" class="table">
 			<tr>
 			<th>Name</th>
 			<th>Location</th>
@@ -99,12 +99,16 @@
     function getPlaceNearby(lat,longi){
     	
     	console.log('clicked for places ' + lat + ', ' + longi);
-
 		socket.emit('get location', longi, lat, function(data){
 			if(data == null){
 				console.log("no places nearby");
+				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">No place nearby</h2>');
+				$('#overlayTable').hide();
 			} else{
+				$('#overlayTable').show();
+				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">Place nearby</h2>');
 				console.log(data);
+				$('#overlayTable tr:last').after('<tr><td>' + data.name + '</td><td>' + data.vicinity + '</td></tr>');
 			}
 			
 			$('#overlay').show();
@@ -114,6 +118,18 @@
 
     function getUserList(){
     	console.log("Print users");
+    }
+
+
+    function createToolTip(event){
+    	$('<div class="tooltip"><h2>Click for place nearby</h2></div>').appendTo('body');
+   		positionTooltip(event); 
+    }
+
+    function positionTooltip(event){
+    	var tPosX = event.pageX;
+    	var tPosY = event.pageY;
+    	$('div.tooltip').css({'position': 'absolute', 'top': tPosY + 'px', 'left': tPosX + 'px'});
     }
 
 	$(document).ready(function(){
@@ -130,6 +146,12 @@
 
 		$('#messages').click(function(e){
 			e.stopPropagation();
+		});
+
+		$('#messages').mouseover(function(event){
+			createToolTip(event);
+		}).mouseout(function(){
+			$('.tooltip').remove();
 		})
 
 	

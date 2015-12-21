@@ -57,7 +57,7 @@ module.exports = function(server){
 		});
 
 		socket.on('get location', function(lon, lat, callback) {
-			var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lon + "," + lat + "&rankby=distance&types=cafe&types=bar&types=restaurant&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew";
+			var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lon + "&rankby=distance&types=cafe&types=bar&types=restaurant&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew";
 
 	        https.get(url,function(response){
 	            var data = '';
@@ -70,7 +70,7 @@ module.exports = function(server){
 	                } catch (err) {
 	                    return handleError(req, res, 500, err); 
 	                }
-	                console.log(data.results[0]);
+	                console.log(data);
 	                callback(data.results[0]);
 	            });
 	        });

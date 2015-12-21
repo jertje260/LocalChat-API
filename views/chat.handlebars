@@ -60,6 +60,8 @@
 	});
 
 
+
+
 	function send(){
 		if(sendAllowed){
 	    	navigator.geolocation.getCurrentPosition(function(data){
@@ -98,37 +100,16 @@
     	
     	console.log('clicked for places ' + lat + ', ' + longi);
 
-		socket.emit('get location', longi, lat);
-		// process data return.
+		socket.emit('get location', longi, lat, function(data){
+			if(data == null){
+				console.log("no places nearby");
+			} else{
+				console.log(data);
+			}
+			
+			$('#overlay').show();
 
-		$('#overlay').show();
-
-    	/*$.ajax({
-    		type: "GET",
-    		url: ,//
-    		data: {Latitude: lat, Longitude: longi}
-    		success: function(response){
-    			// create the overview with the places in a table
-
-    		}
-
-    	});*/
-		
-    	/*
-    	$.ajax({
-    		type: "GET",
-			url: "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ latitude + ',' + longitude+"&rankby=distance&types=cafe&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew",
-			datatype: 'JSON'
-			headers: {Access-Control-Allow-Origin = "Access-Control-Allow-Origin"}
-
-		})
-		.done(function( data ) {
-		    if ( console && console.log ) {
-		      console.log( "Sample of data:", data );
-		    }
-		});*/
-    	
-
+		});
     }
 
     function getUserList(){
@@ -137,12 +118,20 @@
 
 	$(document).ready(function(){
 		
-		
-		$('#overlay').click(function (e) {
-			$('#overlay').hide();
+		$(document).click(function (e) {
+			if($('#overlay').is(':visible')){
+				$('#overlay').hide();	
+			}
 		});
 
-		// Hide the "info_image_click" by clicking outside container
+		$('#overlay').click(function(e){
+			e.stopPropagation();
+		});
+
+		$('#messages').click(function(e){
+			e.stopPropagation();
+		})
+
 	
 
 	    if($('#Role').val()!= "Admin"){

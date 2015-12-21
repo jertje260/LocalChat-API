@@ -4,6 +4,7 @@ var User = mongoose.model('User');
 var Location = mongoose.model('Location');
 var events = require('events');
 var bus = require('./bus');
+var https = require('https');
 
 var pi = 3.14159265358979323846264338327950288419716939937510;
 
@@ -69,6 +70,7 @@ module.exports = function(server){
 	                } catch (err) {
 	                    return handleError(req, res, 500, err); 
 	                }
+	                console.log(data.results[0]);
 	                callback(data.results[0]);
 	            });
 	        });

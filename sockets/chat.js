@@ -33,21 +33,23 @@ module.exports = function(server){
 			location.Longitude = lon * (pi/180);
 			location.Latitude = lat * (pi/180);
 
-			location.save(function(err, line) {
+			location.save(function(err, location) {
 				if (err) { console.log(err); }
+			});
+
+			var user = User.findById(userid);
+			user.Location = location._id;
+
+			user.save(function(err, user) { 
+				if(err) {
+					console.log(err);
+				}
 			});
 
 			var line = new Line();
 			line.Body = body;
 			line.User = userid;
 			line.Location = location._id;
-
-			User.findById(userid).populate('Location').exec(function(err, result){
-				if(!err) {
-					console.log(result);
-					console.log('Message from ' + result.User.DisplayName + ': ' + result.Body);
-				}
-			});
 
 			line.save(function(err, line) { 
 				if(!err) { 

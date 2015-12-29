@@ -43,8 +43,7 @@
 	socket.emit("join", UserName);
 
 	socket.on('join', function(User){
-		// $('#messages').append( '<li>The user ' + User.UserName + ' with name ' + User.DisplayName + ' joined the chat</li>');
-		$('#messages').append( '<li>' + User.DisplayName + ' joined the chat.<a onclick="getUserList(' + User.Location.Latitude + ', ' + User.Location.Longitude + ')">User list</a></li>');
+		$('#messages').append( '<li>' + User.DisplayName + ' joined the chat.</li>');
 	});
 
 	socket.on('msg', function(line){

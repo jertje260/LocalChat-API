@@ -84,10 +84,6 @@ function login(req, res, next) {
 	});
 }
 
-	
-	
-
-
 // Export
 module.exports = function (mongoose, errCallback){
 	console.log('Initializing users routing module');

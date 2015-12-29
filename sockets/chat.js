@@ -41,6 +41,14 @@ module.exports = function(server){
 			line.Body = body;
 			line.User = userid;
 			line.Location = location._id;
+
+			User.findById(userid).populate('Location').exec(function(err, result){
+				if(!err) {
+					console.log(result);
+					console.log('Message from ' + result.User.DisplayName + ': ' + result.Body);
+				}
+			});
+
 			line.save(function(err, line) { 
 				if(!err) { 
 					bus.emit('bus chat msg', line._id);
@@ -73,24 +81,6 @@ module.exports = function(server){
 	                }
 	                console.log(data);
 	                callback(data.results[0]);
-	            });
-	        });
-		});
-
-		socket.on('get users', function(callback){
-			https.get('/users',function(response){
-	            var data = '';
-	            response.on('data',function(d){
-	                data += d;
-	            });
-	            response.on('end',function(){
-	                try {
-	                    data = JSON.parse(data);
-	                } catch (err) {
-	                    return handleError(req, res, 500, err); 
-	                }
-	                console.log(data);
-	                callback(data.results);
 	            });
 	        });
 		});

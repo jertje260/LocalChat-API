@@ -44,7 +44,7 @@
 
 	socket.on('join', function(User){
 		// $('#messages').append( '<li>The user ' + User.UserName + ' with name ' + User.DisplayName + ' joined the chat</li>');
-		$('#messages').append( '<li>' + User.DisplayName + ' joined the chat.<a onclick="getUserList()">User list</a></li>');
+		$('#messages').append( '<li>' + User.DisplayName + ' joined the chat.<a onclick="getUserList(' + User.Location.Latitude + ', ' + User.Location.Longitude + ')">User list</a></li>');
 	});
 
 	socket.on('msg', function(line){
@@ -58,9 +58,6 @@
 		if (User.DisplayName != undefined && User.DisplayName != null)
 			$('#messages').append( '<li>' + User.DisplayName + ' left the chat</li>');
 	});
-
-
-
 
 	function send(){
 		if(sendAllowed){
@@ -99,6 +96,9 @@
     function getPlaceNearby(lat,longi){
     	
     	console.log('clicked for places ' + lat + ', ' + longi);
+
+    	var placeNumber = 1;
+
 		socket.emit('get location', longi, lat, function(data){
 			if(data == null){
 				console.log("no places nearby");
@@ -108,16 +108,32 @@
 				$('#overlayTable').show();
 				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">Place nearby</h2>');
 				console.log(data);
-				$('#overlayTable tr:last').after('<tr><td>' + data.name + '</td><td>' + data.vicinity + '</td></tr>');
+				$('#overlayTable tr:last').after('<tr><td>' + data.name + '</td><td><a onclick="showPlaceNearby(' + placeNumber + ')">' + data.vicinity + '</a></td>');
+				$('#overlayTable td:last').after('<td id="placeNearby placeNearby' + placeNumber + '" display="none"><img src="http://maps.googleapis.com/maps/api/staticmap?zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C' + longi + ',' + lat + '"></td></tr>');
 			}
 			
 			$('#overlay').show();
-
 		});
     }
 
-    function getUserList(){
+    function showPlaceNearby(placeNumber){
+    	$('#placeNearby').hide();
+    	$('#placeNearby' + placeNumber).show();
+    }
+
+    function getUserList(lat, longi){
     	console.log("Print users");
+    	socket.emit('get users', function(data){
+    		if (data == null){
+				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">No people in chat</h2>');
+				$('#overlayTable').hide();
+    		} else {
+    			$('#overlayTitle').replaceWith('<h2 id="overlayTitle">People in chat</h2>');
+    			$.each(data, function(user){
+    				$('#overlayTable tr:last').after('<tr><td>' + user.DisplayName + '</td></tr>');
+    			});
+    		}
+    	});
     }
 
 

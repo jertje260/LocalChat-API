@@ -65,7 +65,7 @@
 	    		var lon = data.coords.longitude;
 	    		var id = UserId;
 	    		var body = $('#msg').val();
-	    		socket.emit('send msg', body, id, lon, lat);
+	    		socket.emit('sendmsg', body, id, lon, lat);
 	    		$('input').val('');
 	    		$('#msgbutton').prop('disabled', true);
     			sendAllowed = false;
@@ -95,10 +95,12 @@
     function getPlaceNearby(lat,longi){
     	
     	console.log('clicked for places ' + lat + ', ' + longi);
-
+		
     	var placeNumber = 1;
-
-		socket.emit('get location', longi, lat, function(data){
+		lat = lat*(180/Math.PI);
+		longi = longi*(180/Math.PI);
+		console.log('clicked for places ' + lat + ', ' + longi);
+		socket.emit('getlocation', longi, lat, function(data){
 			if(data == null){
 				console.log("no places nearby");
 				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">No place nearby</h2>');
@@ -108,7 +110,7 @@
 				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">Place nearby</h2>');
 				console.log(data);
 				$('#overlayTable tr:last').after('<tr><td>' + data.name + '</td><td><a onclick="showPlaceNearby(' + placeNumber + ')">' + data.vicinity + '</a></td>');
-				$('#overlayTable td:last').after('<td id="placeNearby placeNearby' + placeNumber + '" display="none"><img src="http://maps.googleapis.com/maps/api/staticmap?zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C' + longi + ',' + lat + '"></td></tr>');
+				$('#overlayTable td:last').after('<td id="placeNearby placeNearby' + placeNumber + '" display="none"><img src="http://maps.googleapis.com/maps/api/staticmap?zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C' + lat + ',' + longi + '"></td></tr>');
 			}
 			
 			$('#overlay').show();
@@ -122,7 +124,7 @@
 
     function getUserList(lat, longi){
     	console.log("Print users");
-    	socket.emit('get users', function(data){
+    	socket.emit('getusers', function(data){
     		if (data == null){
 				$('#overlayTitle').replaceWith('<h2 id="overlayTitle">No people in chat</h2>');
 				$('#overlayTable').hide();

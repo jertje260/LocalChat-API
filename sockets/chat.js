@@ -4,6 +4,7 @@ var User = mongoose.model('User');
 var Location = mongoose.model('Location');
 var events = require('events');
 var bus = require('./bus');
+var https = require('https');
 
 var users = require('../routes/users');
 
@@ -28,7 +29,7 @@ module.exports = function(server){
 				});
 		});
 
-		socket.on('send msg', function(body, userid, lon, lat){
+		socket.on('sendmsg', function(body, userid, lon, lat){
 			var location = new Location();
 			location.Longitude = lon * (pi/180);
 			location.Latitude = lat * (pi/180);
@@ -36,15 +37,14 @@ module.exports = function(server){
 			location.save(function(err, location) {
 				if (err) { console.log(err); }
 			});
-
-			var user = User.findById(userid);
-			user.Location = location._id;
-
-			user.save(function(err, user) { 
-				if(err) {
-					console.log(err);
+			User.update({id:userid}, {Location: location._id}, function(error, user){
+				if(error) {
+					console.log(error);
 				}
 			});
+
+
+			
 
 			var line = new Line();
 			line.Body = body;
@@ -67,7 +67,7 @@ module.exports = function(server){
 			}
 		});
 
-		socket.on('get location', function(lon, lat, callback) {
+		socket.on('getlocation', function(lon, lat, callback) {
 			var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lon + "&rankby=distance&types=cafe&types=bar&types=restaurant&key=AIzaSyBNDnIEOA-fojCBMtgMRISNzJyG3NAIOew";
 
 	        https.get(url,function(response){
@@ -79,6 +79,7 @@ module.exports = function(server){
 	                try {
 	                    data = JSON.parse(data);
 	                } catch (err) {
+						console.log(err);
 	                    return handleError(req, res, 500, err); 
 	                }
 	                console.log(data);
